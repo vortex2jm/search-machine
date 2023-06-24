@@ -5,14 +5,16 @@
 #include <stdlib.h>
 typedef struct page Page;
 
-Page* createPage(FILE* inputFile, double pageRank);
+Page *createPage(char *page_name);
 
-FILE* getFile(Page* p);
+double getPageRank(Page *p);
 
-double getPageRank(Page* p);
+void setPageRank(Page *p, double pr);
 
-char* getPageName(Page* p);
+char *getPageName(Page *p);
 
-void freePage(Page* p);
+int pageComparator(Page *p1, Page *p2);
+
+void freePage(Page *p);
 
 #endif
