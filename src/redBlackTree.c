@@ -1,9 +1,8 @@
-//===================================================//
-// Todas as estruturas que contém heap foram comentadas
-//===================================================//
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <strings.h>
 
 #include "../include/redBlackTree.h"
 
@@ -12,29 +11,38 @@
 #define RED true
 #define BLACK false
 
-struct node {
-  char *word;
-  // Heap* pages;
+struct node{
+  char *key;
+  void *value;
   bool color;
-  RBT *left;
-  RBT *right;
+  Tree *left, *right;
 };
 
+Tree* treeCreateNode(char *key, void *value, bool color){
+  Tree* newNode = malloc(sizeof(Tree));
+  newNode->color = color;
+  newNode->key = strdup(key);
+  newNode->value = value;
+  newNode->left = NULL;
+  newNode->right = NULL;
+  return newNode;
+}
+
 // funções auxiliares
-static bool isRed(RBT *node) {
+static bool isRed(Tree *node) {
   if (node == NULL)
     return BLACK;
   return node->color;
 }
 
-static void colorFlip(RBT *node) {
+static void colorFlip(Tree *node) {
   node->color = RED;
   node->left->color = BLACK;
   node->right->color = BLACK;
 }
 
-static RBT *rotateRight(RBT *node) {
-  RBT *aux = node->left;
+static Tree *rotateRight(Tree *node) {
+  Tree *aux = node->left;
   node->left = aux->right;
   aux->right = node;
   aux->color = aux->right->color;
@@ -42,8 +50,8 @@ static RBT *rotateRight(RBT *node) {
   return aux;
 }
 
-RBT *rotateLeft(RBT *node) {
-  RBT *aux = node->right;
+static Tree *rotateLeft(Tree *node) {
+  Tree *aux = node->right;
   node->right = aux->left;
   aux->left = node;
   aux->color = aux->left->color;
@@ -51,54 +59,44 @@ RBT *rotateLeft(RBT *node) {
   return aux;
 }
 
-// RBT* rbtCreateNode(char* word, Heap* pages, bool color, int maxPages){
-//     RBT* new = malloc(sizeof(RBT));
-//     new->word = strdup(word);
-//     new->pages = heapInit(maxPages);
-//     new->color = BLACK;
-//     new->right = NULL;
-//     new->left = NULL;
-//     return new;
-// }
-
-// Heap* rbtSearch(RBT* root, char* key) {
-//     return recursiveSearch(root, key);
-// }
-
-// static Heap* recursiveSearch(RBT* node, char* key) {
-//     if (node == NULL) { return NULL_VALUE; }
-//     int cmp = strcasecmp(key, node->word);
-//
-//     if (cmp < 0) { return rec_get(node->left, key); }
-//     else if (cmp > 0) { return rec_get(node->right, key); }
-//     else /*cmp == 0*/ { return node->pages; }
-// }
-
-RBT *RBT_insert(RBT *node, char *key, Page *value, int maxPages) {
+Tree* treeInsert(Tree *node, char *key, void *value) {
   // Insert at bottom and color it red.
-  if (node == NULL) {
-    return rbtCreateNode(key, value, RED, maxPages);
-  }
-  int cmp = compare(key, node->word);
+  if (node == NULL) { return treeCreateNode(key, value, RED); }
+  int cmp = strcasecmp(key, node->key);
 
-  if (cmp < 0) {
-    node->left = RBT_insert(node->left, key, value, maxPages);
-  } else if (cmp > 0) {
-    node->right = RBT_insert(node->right, key, value, maxPages);
-  }
-  // else /*cmp == 0*/ { node->pages = value; } //heap insertion
+  if (cmp < 0) { node->left = treeInsert(node->left, key, value); } 
+  else if (cmp > 0) { node->right = treeInsert(node->right, key, value); }
+  else { node->value = value; } 
 
   // Lean left.
-  if (isRed(node->right) && !isRed(node->left)) {
-    node = rotateLeft(node);
-  }
+  if (isRed(node->right) && !isRed(node->left)) { node = rotateLeft(node); }
   // Balance 4-node.
-  if (isRed(node->left) && isRed(node->left->left)) {
-    node = rotateRight(node);
-  }
+  if (isRed(node->left) && isRed(node->left->left)) { node = rotateRight(node);}
   // Split 4-node.
-  if (isRed(node->left) && isRed(node->right)) {
-    colorFlip(node);
-  }
+  if (isRed(node->left) && isRed(node->right)) { colorFlip(node); }
   return node;
+}
+
+Tree* treeSearch(Tree* root, char* key) {
+  while (root != NULL) {
+    int cmp = strcasecmp(key, root->key);
+    if (cmp < 0) root = root->left;
+    else if (cmp > 0) root = root->right;
+    else return root;
+  }
+  
+  return NULL;
+}
+
+void* treeGetValue(Tree* node){
+  return node->value;
+}
+
+void treeFree(Tree* root){
+  if(root != NULL){
+    treeFree(root->left);
+    treeFree(root->right);
+    free(root->key);
+    free(root);
+  }
 }

@@ -1,16 +1,19 @@
-#ifndef RBT_H
-#define RBT_H
+#ifndef TREE_H
+#define TREE_H
 
-#include "page.h"
 #include <stdbool.h>
 #include <string.h>
 
-typedef struct node RBT;
+typedef struct node Tree;
 
-// RBT* rbtCreateNode(char* word, Heap* pages, bool color, int maxPages);
+Tree* treeCreateNode(char* key, void* value, bool color);
 
-// Heap* rbtSearch(RBT* root, char* key);
+Tree* treeInsert(Tree* node, char* key, void* value);
 
-RBT *RBT_insert(RBT *node, char *key, Page *value, int maxPages);
+Tree* treeSearch(Tree* root, char* key);
+
+void* treeGetValue(Tree* node);
+
+void treeFree(Tree* root);
 
 #endif
