@@ -1,6 +1,9 @@
 #include "../include/util.h"
 #include "../include/redBlackTree.h"
+#include "../include/stopWordsTree.h"
+#include "../include/termsTree.h"
 #include "../include/page.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -105,20 +108,59 @@ void pageRanking(int pageAmount, Tree* pageTree) {
    
 }
 
-//================//
-//Deals with stopWords and main symbol table
-//relevant files: stopwords.txt, pages files in ./pages
-//TODO: deal with % in end of reading
-void indexer(){
-  //first step: create stopwords symbol table with key = value
-  FILE* stopWordsFile = fopen("./test/stopwords.txt", "r");
+//builds symbol table with stopwords.txt
+//returns the root to the table
+stopWordTree* buildStopWordsTree(){
+  FILE* stopWordsFile = fopen("./tests/stopwords.txt", "r");
   char* currentWord = NULL;
-  size_t size =0;
+  size_t size = 0;
+  stopWordTree* root = NULL;
+
   while(getline(&currentWord, &size, stopWordsFile) != -1){
-    //printf("%s", currentWord);
+    currentWord = strtok(currentWord, " \n");
+    root = stopWordTreeInsert(root, currentWord);
   }
+
+  free(currentWord);
   fclose(stopWordsFile);
+
+  return root;
 }
+
+termsTree* buildTermsTree(Tree* pages, stopWordTree* stopwords){
+  FILE* indexFile = fopen("./tests/index.txt", "r"); 
+  char* currentFile = NULL; size_t size = 0;
+  termsTree* terms = NULL;
+
+  //percorre o conjunto de arquivos
+  while(getline(&currentFile, &size, indexFile) != -1){
+    currentFile = strtok(currentFile, " \n");
+    char* pageDir = strdup(currentFile);
+    sprintf(pageDir, "./tests/pages/%s", currentFile);
+
+    FILE* page = fopen(pageDir, "r");
+    char* line = NULL;
+    //percorre um arquivo
+    while(getline(&line, &size, page) != -1){ 
+      char*  word = strtok(line, " \n\t");
+
+      // se a word não estiver na árvore de stopwords
+      if(stopWordTreeSearch(stopwords, word) == NULL){
+        terms = termsTreeInsert(terms, word, pages, currentFile);  
+      } 
+
+    }
+
+    free(pageDir);
+    fclose(page);
+  }
+
+  fclose(indexFile);  
+  return terms;
+}
+
+
+
 
 //================//
 void consult(){
