@@ -4,6 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void setPageRankCallback(void* node, void* PR){
+  Tree* castTree = node;
+  Page* castPage = treeGetValue(castTree);
+  double* PRDouble = PR;
+  setPageRank(castPage,*PRDouble);
+}
+
 //============================//
 Tree *readPages(char *mainDir, int *pgCount){  
   char fileName[100];
@@ -71,9 +78,18 @@ void readGraph(Tree * root, char * mainDir){
 }
 
 //================//
-void pageRanking() {
+void pageRanking(int pageAmount, Tree* pageTree) {
   // TODO
   //Inicio de valor inicial  
+  double firstPR = 1.0/(double)pageAmount;
+  treeTraversalInOrder(pageTree,setPageRankCallback, &firstPR);
+
+  double variation = 0.0;
+
+  while(variation >= ALPHA){
+    
+  }
+   
 }
 
 //================//

@@ -69,7 +69,7 @@ int pageComparatorByName(void * p1, void * p2){
 }
 
 //========================//
-void printPage(void * page){
+void printPage(void * page, void * argument){
   Page * pg = treeGetValue((Tree*)page);
   // Page * pg = page;
   printf("Page name: %s ; Page rank = %lf, outPages = %d\n", pg->pageName, pg->pageRank, pg->outPagesSize);
@@ -86,4 +86,16 @@ void freePage(Page *p) {
     free(p);
     }
   }
+}
+
+//==============================================//
+void calculatePageRank(Page * p, void * argument){
+  int pagesAmount = ((int*)argument)[0];
+  int difference = ((int*)argument)[1];
+
+  
+}
+
+void getSumPageRank(Page * p, void * argument){
+  
 }

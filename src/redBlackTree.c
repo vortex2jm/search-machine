@@ -25,7 +25,7 @@ Tree *rotateRight(Tree *node);
 void* treeGetValue(Tree* node);
 Tree* treeSearch(Tree* root, char* key);
 Tree* treeCreateNode(char* key, void* value, bool color);
-void treeTraversalInOrder(Tree * node, TraversalCallback function);
+void treeTraversalInOrder(Tree * node, TraversalCallback function, void * argument);
 Tree* treeInsert(Tree* node, char* key, void* value, CompareCallback function);
 
 // Implementation =====================================//
@@ -69,14 +69,14 @@ void* treeGetValue(Tree* node){
 
 //======================================================//
 //TODO: COLOCAR CALLBACK
-void treeTraversalInOrder(Tree * node, TraversalCallback function){
+void treeTraversalInOrder(Tree * node, TraversalCallback function, void * argument){
   if(!node){
     return;
   }
   
-  treeTraversalInOrder(node->left, function);
-  function(node);
-  treeTraversalInOrder(node->right, function);
+  treeTraversalInOrder(node->left, function, argument);
+  function(node, argument);
+  treeTraversalInOrder(node->right, function, argument);
 }
 
 //=======================//

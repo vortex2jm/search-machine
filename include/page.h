@@ -25,12 +25,14 @@ void setPagesInSize(Page * p, int size);
 
 void setPagesOutSize(Page * p, int size);
 
-void printPage(void * page);
+void printPage(void * page, void * argument);
 
 int pageComparatorByName(void * p1, void * p2);
 
 int pageComparatorByPageRanking(void *p1, void *p2);
 
 void freePage(Page *p);
+
+void calculatePageRank(Page * p, void * argument);
 
 #endif

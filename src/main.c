@@ -5,10 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-void printOut(void * v){
+void printOut(void * v,void * argument){
   Page * p = treeGetValue((Tree*)v);
   printf("PAGINAS QUE SAEM DA PAGINA %s\n", getPageName(p));
-  treeTraversalInOrder(getPagesOut(p), printPage);
+  treeTraversalInOrder(getPagesOut(p), printPage, NULL);
 }
 
 int main(int argc, char *argv[]) {
@@ -22,11 +22,16 @@ int main(int argc, char *argv[]) {
   int pagesAmount=0;
   char *mainDir = strdup(argv[1]);
   Tree * pageTree = readPages(mainDir, &pagesAmount);
-  // treeTraversalInOrder(pageTree, printPage);  // For debug
+  // treeTraversalInOrder(pageTree, printPage, NULL);  // For debug
   readGraph(pageTree, mainDir);
-  // treeTraversalInOrder(pageTree, printOut);  // For debug
+  // treeTraversalInOrder(pageTree, printOut, NULL);  // For debug
+
 
   // Data processing=========//
+  pageRanking(pagesAmount, pageTree);
+  treeTraversalInOrder(pageTree, printOut, NULL);
+
+
 
   // Consult reading=========//
 
