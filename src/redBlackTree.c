@@ -24,21 +24,22 @@ Tree *rotateLeft(Tree *node);
 Tree *rotateRight(Tree *node);
 void* treeGetValue(Tree* node);
 Tree* treeSearch(Tree* root, char* key);
-Tree* treeInsert(Tree* node, char* key, void* value);
 Tree* treeCreateNode(char* key, void* value, bool color);
-void treeTraversalInOrder(Tree * node, Callback function);
+void treeTraversalInOrder(Tree * node, TraversalCallback function);
+Tree* treeInsert(Tree* node, char* key, void* value, CompareCallback function);
 
 // Implementation =====================================//
 //=====================================================//
 
 // Vai precisar adicionar uma callback nessa função para comparar os nós
-Tree* treeInsert(Tree *node, char *key, void *value) {
+//TODO: COLOCAR CALLBACK
+Tree* treeInsert(Tree* node, char* key, void* value, CompareCallback function){
   // Insert at bottom and color it red.
   if (node == NULL) { return treeCreateNode(key, value, RED); }
-  int cmp = strcasecmp(key, node->key);
+  int cmp = function(key, node->key);
 
-  if (cmp < 0) { node->left = treeInsert(node->left, key, value); } 
-  else if (cmp > 0) { node->right = treeInsert(node->right, key, value); }
+  if (cmp < 0) { node->left = treeInsert(node->left, key, value, function); } 
+  else if (cmp > 0) { node->right = treeInsert(node->right, key, value, function); }
   else { node->value = value; } 
 
   // Lean left.
@@ -68,7 +69,8 @@ void* treeGetValue(Tree* node){
 }
 
 //======================================================//
-void treeTraversalInOrder(Tree * node, Callback function){
+//TODO: COLOCAR CALLBACK
+void treeTraversalInOrder(Tree * node, TraversalCallback function){
   if(!node){
     return;
   }

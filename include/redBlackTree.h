@@ -5,17 +5,21 @@
 #include <string.h>
 
 typedef struct node Tree;
-typedef void (*Callback)(void * value);
+
+//funções que devem ser definidas pelo cliente
+typedef void (*TraversalCallback)(void * value);
+typedef int (*CompareCallback)(void * v1, void *v2); 
+
 
 Tree* treeCreateNode(char* key, void* value, bool color);
 
-Tree* treeInsert(Tree* node, char* key, void* value);
+Tree* treeInsert(Tree* node, char* key, void* value, CompareCallback function);
 
 Tree* treeSearch(Tree* root, char* key);
 
 void* treeGetValue(Tree* node);
 
-void treeTraversalInOrder(Tree * node, Callback function);
+void treeTraversalInOrder(Tree * node, TraversalCallback function);
 
 void treeFree(Tree* root);
 
