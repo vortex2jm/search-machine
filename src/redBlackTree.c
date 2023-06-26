@@ -1,9 +1,7 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-
 #include "../include/redBlackTree.h"
 
 #define NULL_KEY NULL
@@ -18,47 +16,22 @@ struct node{
   Tree *left, *right;
 };
 
-Tree* treeCreateNode(char *key, void *value, bool color){
-  Tree* newNode = malloc(sizeof(Tree));
-  newNode->color = color;
-  newNode->key = strdup(key);
-  newNode->value = value;
-  newNode->left = NULL;
-  newNode->right = NULL;
-  return newNode;
-}
+// Prototypes==========================================//
+bool isRed(Tree *node);
+void treeFree(Tree* root);
+void colorFlip(Tree *node);
+Tree *rotateLeft(Tree *node); 
+Tree *rotateRight(Tree *node);
+void* treeGetValue(Tree* node);
+Tree* treeSearch(Tree* root, char* key);
+Tree* treeInsert(Tree* node, char* key, void* value);
+Tree* treeCreateNode(char* key, void* value, bool color);
+void treeTraversalInOrder(Tree * node, Callback function);
 
-// funções auxiliares
-static bool isRed(Tree *node) {
-  if (node == NULL)
-    return BLACK;
-  return node->color;
-}
+// Implementation =====================================//
+//=====================================================//
 
-static void colorFlip(Tree *node) {
-  node->color = RED;
-  node->left->color = BLACK;
-  node->right->color = BLACK;
-}
-
-static Tree *rotateRight(Tree *node) {
-  Tree *aux = node->left;
-  node->left = aux->right;
-  aux->right = node;
-  aux->color = aux->right->color;
-  aux->right->color = RED;
-  return aux;
-}
-
-static Tree *rotateLeft(Tree *node) {
-  Tree *aux = node->right;
-  node->right = aux->left;
-  aux->left = node;
-  aux->color = aux->left->color;
-  aux->left->color = RED;
-  return aux;
-}
-
+// Vai precisar adicionar uma callback nessa função para comparar os nós
 Tree* treeInsert(Tree *node, char *key, void *value) {
   // Insert at bottom and color it red.
   if (node == NULL) { return treeCreateNode(key, value, RED); }
@@ -77,6 +50,7 @@ Tree* treeInsert(Tree *node, char *key, void *value) {
   return node;
 }
 
+//======================================//
 Tree* treeSearch(Tree* root, char* key) {
   while (root != NULL) {
     int cmp = strcasecmp(key, root->key);
@@ -88,10 +62,23 @@ Tree* treeSearch(Tree* root, char* key) {
   return NULL;
 }
 
+//============================//
 void* treeGetValue(Tree* node){
   return node->value;
 }
 
+//======================================================//
+void treeTraversalInOrder(Tree * node, Callback function){
+  if(!node){
+    return;
+  }
+  
+  treeTraversalInOrder(node->left, function);
+  function(node);
+  treeTraversalInOrder(node->right, function);
+}
+
+//=======================//
 void treeFree(Tree* root){
   if(root != NULL){
     treeFree(root->left);
@@ -99,4 +86,52 @@ void treeFree(Tree* root){
     free(root->key);
     free(root);
   }
+}
+
+//===============================//
+// funções auxiliares
+//===============================//
+//=====================================================//
+Tree* treeCreateNode(char *key, void *value, bool color){
+  Tree* newNode = malloc(sizeof(Tree));
+  newNode->color = color;
+  newNode->key = strdup(key);
+  newNode->value = value;
+  newNode->left = NULL;
+  newNode->right = NULL;
+  return newNode;
+}
+
+//===========================//
+bool isRed(Tree *node) {
+  if (node == NULL)
+    return BLACK;
+  return node->color;
+}
+
+//=================================//
+void colorFlip(Tree *node) {
+  node->color = RED;
+  node->left->color = BLACK;
+  node->right->color = BLACK;
+}
+
+//===================================//
+Tree *rotateRight(Tree *node) {
+  Tree *aux = node->left;
+  node->left = aux->right;
+  aux->right = node;
+  aux->color = aux->right->color;
+  aux->right->color = RED;
+  return aux;
+}
+
+//==================================//
+Tree *rotateLeft(Tree *node) {
+  Tree *aux = node->right;
+  node->right = aux->left;
+  aux->left = node;
+  aux->color = aux->left->color;
+  aux->left->color = RED;
+  return aux;
 }
