@@ -1,6 +1,8 @@
 #include "../include/page.h"
 #include "../include/util.h"
 #include "../include/redBlackTree.h"
+#include "../include/stopWordsTree.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,15 +28,13 @@ int main(int argc, char *argv[]) {
   Tree * pageTree = readPages(mainDir, &pagesAmount);
   //treeTraversalInOrder(pageTree, printPage, NULL);  // For debug
   readGraph(pageTree, mainDir);
-  indexer();
+  stopWordTree* stopwords = buildStopWordsTree();
   //treeTraversalInOrder(pageTree, printOut, NULL);  // For debug
 
 
   // Data processing=========//
-  pageRanking(pagesAmount, pageTree);
-  treeTraversalInOrder(pageTree, printPage, NULL);
-
-
+  //pageRanking(pagesAmount, pageTree);
+  //treeTraversalInOrder(pageTree, printPage, NULL);
 
   // Consult reading=========//
 
