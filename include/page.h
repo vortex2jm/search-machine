@@ -15,7 +15,7 @@ char *getPageName(Page *p);
 
 void printPage(void * page);
 
-int pageComparator(Page *p1, Page *p2);
+int pageComparator(void *p1, void *p2);
 
 void freePage(Page *p);
 

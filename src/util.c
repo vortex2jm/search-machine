@@ -18,7 +18,7 @@ Tree *readPages(char * mainDir){
   while(!feof(pagesFile)){
     fscanf(pagesFile,"%[^\n]\n", line);
     pg = createPage(line);
-    tree = treeInsert(tree, line, pg);
+    tree = treeInsert(tree, line, pg, pageComparator);
   }
   return tree;
 }

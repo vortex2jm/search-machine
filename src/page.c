@@ -35,11 +35,13 @@ void setPageRank(Page *p, double pr) { p->pageRank = pr; }
 char *getPageName(Page *p) { return p->pageName; }
 
 //===================================//
-// Parametro para inserir ordenadamente na arvore de pages de cada palavra ( fila de prioridade)
-int pageComparator(Page *p1, Page *p2) {
-  if (p1->pageRank < p2->pageRank)
+int pageComparator(void *p1, void *p2) {
+  Page *pg1 = p1;
+  Page *pg2 = p2;
+
+  if (pg1->pageRank < pg2->pageRank)
     return -1;
-  if (p1->pageRank == p2->pageRank)
+  if (pg1->pageRank == pg2->pageRank)
     return 0;
   return 1;
 }
