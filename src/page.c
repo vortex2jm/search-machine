@@ -83,7 +83,7 @@ int pageComparatorByName(void * p1, void * p2){
 void printPage(void * page, void * argument){
   Page * pg = treeGetValue((Tree*)page);
   // Page * pg = page;
-  printf("Page name: %s ; Page rank = %lf, outPages = %d\n", pg->pageName, pg->pageRank, pg->outPagesSize);
+  printf("Page name: %s ; Page rank = %.16lf, outPages = %d\n", pg->pageName, pg->pageRank, pg->outPagesSize);
 }
 
 //===================================//
@@ -100,13 +100,16 @@ void freePage(Page *p) {
 }
 
 //==============================================//
-void calculatePageRank(Page * p, void * argument){
+void calculatePageRank(void * page, void * argument){
+  Page * p = (treeGetValue((Tree*) page));
+
   double pagesAmount = ((double*)argument)[0];
   double difference = ((double*)argument)[1];
 
   double pr = 0.0;
 
   treeTraversalInOrder(p->inPages,getSumPageRank,&pr);
+
 
   if(p->outPagesSize==0){
     pr += getLastPageRank(p);
@@ -117,13 +120,25 @@ void calculatePageRank(Page * p, void * argument){
 
   setPageRank(p,pr);
 
-  difference += (pr - getLastPageRank(p)); //Calcular variação
+  if((pr < getLastPageRank(p))){ //Calcular variação
+  difference -= (pr - getLastPageRank(p));
+  }else{
+    difference += (pr - getLastPageRank(p));
+  }
 
-  
+  double* vetor = (double*)argument;
+
+  vetor[1] = difference;  
   
 }
 
-void getSumPageRank(Page * p, void * argument){ //ERRADO, PROCURAR COMO FAZER ARMAZENAMENTO DE INTERAÇÃO PASSADA
-  int* sum = (int*) argument;
+void getSumPageRank(void * page, void * argument){ 
+  Page * p = (treeGetValue((Tree*) page));
+  double* sum = (double*) argument;
   *sum += p->lastPageRank/p->outPagesSize;
+}
+
+void updatePageRank(void * page, void* argument){
+  Page * p = (treeGetValue((Tree*) page));
+  setLastPageRank(p,getPageRank(p));
 }

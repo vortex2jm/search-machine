@@ -27,12 +27,12 @@ int main(int argc, char *argv[]) {
   //treeTraversalInOrder(pageTree, printPage, NULL);  // For debug
   readGraph(pageTree, mainDir);
   indexer();
-  treeTraversalInOrder(pageTree, printOut, NULL);  // For debug
+  //treeTraversalInOrder(pageTree, printOut, NULL);  // For debug
 
 
   // Data processing=========//
   pageRanking(pagesAmount, pageTree);
-  treeTraversalInOrder(pageTree, printOut, NULL);
+  treeTraversalInOrder(pageTree, printPage, NULL);
 
 
 

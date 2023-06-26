@@ -91,17 +91,15 @@ void pageRanking(int pageAmount, Tree* pageTree) {
 
   double variables[2];
   variables[0] = (double) pageAmount;
-  variables[1] = 0.0;
+  variables[1] = 1.0;
   
-
-  while(variables[1] >= ALPHA){
+  //Atualização
+  while(variables[1] >= PGR_LIMIT){
     variables[1] = 0.0;
 
+    treeTraversalInOrder(pageTree,calculatePageRank,variables);
 
-
-
-
-
+    treeTraversalInOrder(pageTree, updatePageRank,NULL);
     variables[1] /= pageAmount;
   }
    
@@ -117,7 +115,7 @@ void indexer(){
   char* currentWord = NULL;
   size_t size =0;
   while(getline(&currentWord, &size, stopWordsFile) != -1){
-    printf("%s", currentWord);
+    //printf("%s", currentWord);
   }
   fclose(stopWordsFile);
 }

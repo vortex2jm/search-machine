@@ -42,8 +42,10 @@ int pageComparatorByPageRanking(void *p1, void *p2);
 
 void freePage(Page *p);
 
-void calculatePageRank(Page * p, void * argument);
+void calculatePageRank(void * page, void * argument);
 
-void getSumPageRank(Page * p, void * argument);
+void getSumPageRank(void * page, void * argument);
+
+void updatePageRank(void * page, void* argument);
 
 #endif
