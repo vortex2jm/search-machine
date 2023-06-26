@@ -11,6 +11,7 @@ struct page {
   int outPagesSize;
   int inPagesSize;
   double pageRank;
+  double lastPageRank;
 };
 
 //===================================//
@@ -22,6 +23,7 @@ Page *createPage(char *pageName) {
   newPage->inPagesSize = 0;
   newPage->outPagesSize = 0;
   newPage->pageRank = 0;
+  newPage->lastPageRank = 0;
   return newPage;
 }
 
@@ -32,22 +34,56 @@ double getPageRank(Page *p) { return p->pageRank; }
 void setPageRank(Page *p, double pr) { p->pageRank = pr; }
 
 //===================================//
-char *getPageName(Page *p) { return p->pageName; }
+double getLastPageRank(Page *p) { return p->lastPageRank; }
 
 //===================================//
-// Parametro para inserir ordenadamente na arvore de pages de cada palavra ( fila de prioridade)
-int pageComparator(Page *p1, Page *p2) {
-  if (p1->pageRank < p2->pageRank)
+void setLastPageRank(Page *p, double pr) { p->lastPageRank = pr; }
+
+//===================================//
+char *getPageName(Page *p) { return p->pageName; }
+
+//=============================================//
+Tree * getPagesIn(Page * p){ return p->inPages; }
+
+//=============================================//
+Tree * getPagesOut(Page * p){ return p->outPages; }
+
+//=============================================//
+void setPagesOut(Page * p, Tree * node){ p->outPages = node; }
+
+//=============================================//
+void setPagesIn(Page * p, Tree * node){ p->inPages = node; }
+
+//=============================================//
+void setPagesInSize(Page * p){ p->inPagesSize += 1; }
+
+//=============================================//
+void setPagesOutSize(Page * p, int size){ p->outPagesSize = size; }
+
+//===================================//
+int pageComparatorByPageRanking(void *p1, void *p2) {
+  Page *pg1 = p1;
+  Page *pg2 = p2;
+
+  if (pg1->pageRank < pg2->pageRank)
     return -1;
-  if (p1->pageRank == p2->pageRank)
+  if (pg1->pageRank == pg2->pageRank)
     return 0;
   return 1;
 }
 
+//===========================================//
+int pageComparatorByName(void * p1, void * p2){
+  Page *pg1 = p1;
+  Page *pg2 = p2;
+  return strcasecmp(pg1->pageName, pg2->pageName);
+}
+
 //========================//
-void printPage(void * page){
-  Page * pg = page;
-  printf("Page name: %s ; Page rank = %lf\n", pg->pageName, pg->pageRank);
+void printPage(void * page, void * argument){
+  Page * pg = treeGetValue((Tree*)page);
+  // Page * pg = page;
+  printf("Page name: %s ; Page rank = %lf, outPages = %d\n", pg->pageName, pg->pageRank, pg->outPagesSize);
 }
 
 //===================================//
@@ -61,4 +97,33 @@ void freePage(Page *p) {
     free(p);
     }
   }
+}
+
+//==============================================//
+void calculatePageRank(Page * p, void * argument){
+  double pagesAmount = ((double*)argument)[0];
+  double difference = ((double*)argument)[1];
+
+  double pr = 0.0;
+
+  treeTraversalInOrder(p->inPages,getSumPageRank,&pr);
+
+  if(p->outPagesSize==0){
+    pr += getLastPageRank(p);
+  }
+
+  pr *= ALPHA;
+  pr += (1-ALPHA)/pagesAmount;
+
+  setPageRank(p,pr);
+
+  difference += (pr - getLastPageRank(p)); //Calcular variação
+
+  
+  
+}
+
+void getSumPageRank(Page * p, void * argument){ //ERRADO, PROCURAR COMO FAZER ARMAZENAMENTO DE INTERAÇÃO PASSADA
+  int* sum = (int*) argument;
+  *sum += p->lastPageRank/p->outPagesSize;
 }

@@ -25,18 +25,16 @@ Tree *rotateRight(Tree *node);
 void* treeGetValue(Tree* node);
 Tree* treeSearch(Tree* root, char* key);
 Tree* treeCreateNode(char* key, void* value, bool color);
-void treeTraversalInOrder(Tree * node, TraversalCallback function);
+void treeTraversalInOrder(Tree * node, TraversalCallback function, void * argument);
 Tree* treeInsert(Tree* node, char* key, void* value, CompareCallback function);
 
 // Implementation =====================================//
 //=====================================================//
-
-// Vai precisar adicionar uma callback nessa função para comparar os nós
-//TODO: COLOCAR CALLBACK
 Tree* treeInsert(Tree* node, char* key, void* value, CompareCallback function){
   // Insert at bottom and color it red.
   if (node == NULL) { return treeCreateNode(key, value, RED); }
-  int cmp = function(key, node->key);
+  
+  int cmp = function(value, node->value);
 
   if (cmp < 0) { node->left = treeInsert(node->left, key, value, function); } 
   else if (cmp > 0) { node->right = treeInsert(node->right, key, value, function); }
@@ -52,6 +50,7 @@ Tree* treeInsert(Tree* node, char* key, void* value, CompareCallback function){
 }
 
 //======================================//
+//Adicionar callback futuramente para busca de arvores ordenadas por page ranking
 Tree* treeSearch(Tree* root, char* key) {
   while (root != NULL) {
     int cmp = strcasecmp(key, root->key);
@@ -70,14 +69,14 @@ void* treeGetValue(Tree* node){
 
 //======================================================//
 //TODO: COLOCAR CALLBACK
-void treeTraversalInOrder(Tree * node, TraversalCallback function){
+void treeTraversalInOrder(Tree * node, TraversalCallback function, void * argument){
   if(!node){
     return;
   }
   
-  treeTraversalInOrder(node->left, function);
-  function(node);
-  treeTraversalInOrder(node->right, function);
+  treeTraversalInOrder(node->left, function, argument);
+  function(node, argument);
+  treeTraversalInOrder(node->right, function, argument);
 }
 
 //=======================//
