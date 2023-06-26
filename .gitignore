@@ -1,5 +1,4 @@
 trab3
 obj/
 .vscode/
-testesRBT
-test/
+./tests
