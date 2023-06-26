@@ -11,6 +11,7 @@ struct page {
   int outPagesSize;
   int inPagesSize;
   double pageRank;
+  double lastPageRank;
 };
 
 //===================================//
@@ -22,6 +23,7 @@ Page *createPage(char *pageName) {
   newPage->inPagesSize = 0;
   newPage->outPagesSize = 0;
   newPage->pageRank = 0;
+  newPage->lastPageRank = 0;
   return newPage;
 }
 
@@ -30,6 +32,12 @@ double getPageRank(Page *p) { return p->pageRank; }
 
 //===================================//
 void setPageRank(Page *p, double pr) { p->pageRank = pr; }
+
+//===================================//
+double getLastPageRank(Page *p) { return p->lastPageRank; }
+
+//===================================//
+void setLastPageRank(Page *p, double pr) { p->lastPageRank = pr; }
 
 //===================================//
 char *getPageName(Page *p) { return p->pageName; }
@@ -93,12 +101,29 @@ void freePage(Page *p) {
 
 //==============================================//
 void calculatePageRank(Page * p, void * argument){
-  int pagesAmount = ((int*)argument)[0];
-  int difference = ((int*)argument)[1];
+  double pagesAmount = ((double*)argument)[0];
+  double difference = ((double*)argument)[1];
 
+  double pr = 0.0;
+
+  treeTraversalInOrder(p->inPages,getSumPageRank,&pr);
+
+  if(p->outPagesSize==0){
+    pr += getLastPageRank(p);
+  }
+
+  pr *= ALPHA;
+  pr += (1-ALPHA)/pagesAmount;
+
+  setPageRank(p,pr);
+
+  difference += (pr - getLastPageRank(p)); //Calcular variação
+
+  
   
 }
 
-void getSumPageRank(Page * p, void * argument){
-  
+void getSumPageRank(Page * p, void * argument){ //ERRADO, PROCURAR COMO FAZER ARMAZENAMENTO DE INTERAÇÃO PASSADA
+  int* sum = (int*) argument;
+  *sum += p->lastPageRank/p->outPagesSize;
 }

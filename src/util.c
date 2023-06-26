@@ -9,6 +9,7 @@ void setPageRankCallback(void* node, void* PR){
   Page* castPage = treeGetValue(castTree);
   double* PRDouble = PR;
   setPageRank(castPage,*PRDouble);
+  setLastPageRank(castPage,*PRDouble);
 }
 
 //============================//
@@ -87,10 +88,20 @@ void pageRanking(int pageAmount, Tree* pageTree) {
   double firstPR = 1.0/(double)pageAmount;
   treeTraversalInOrder(pageTree,setPageRankCallback, &firstPR);
 
-  double variation = 0.0;
+  double variables[2];
+  variables[0] = (double) pageAmount;
+  variables[1] = 0.0;
+  
 
-  while(variation >= ALPHA){
-    
+  while(variables[1] >= ALPHA){
+    variables[1] = 0.0;
+
+
+
+
+
+
+    variables[1] /= pageAmount;
   }
    
 }

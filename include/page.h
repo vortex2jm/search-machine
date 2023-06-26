@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include "redBlackTree.h"
 
+#define ALPHA 0.85
+
+
 typedef struct page Page;
 
 Page *createPage(char *page_name);
@@ -12,6 +15,10 @@ Page *createPage(char *page_name);
 double getPageRank(Page *p);
 
 void setPageRank(Page *p, double pr);
+
+double getLastPageRank(Page *p);
+
+void setLastPageRank(Page *p, double pr);
 
 char *getPageName(Page *p);
 
@@ -36,5 +43,7 @@ int pageComparatorByPageRanking(void *p1, void *p2);
 void freePage(Page *p);
 
 void calculatePageRank(Page * p, void * argument);
+
+void getSumPageRank(Page * p, void * argument);
 
 #endif
