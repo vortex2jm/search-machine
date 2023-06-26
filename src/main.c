@@ -24,9 +24,10 @@ int main(int argc, char *argv[]) {
   int pagesAmount=0;
   char *mainDir = strdup(argv[1]);
   Tree * pageTree = readPages(mainDir, &pagesAmount);
-  // treeTraversalInOrder(pageTree, printPage, NULL);  // For debug
+  //treeTraversalInOrder(pageTree, printPage, NULL);  // For debug
   readGraph(pageTree, mainDir);
-  // treeTraversalInOrder(pageTree, printOut, NULL);  // For debug
+  indexer();
+  treeTraversalInOrder(pageTree, printOut, NULL);  // For debug
 
 
   // Data processing=========//
@@ -40,6 +41,5 @@ int main(int argc, char *argv[]) {
   // Consult processing======//
 
   free(mainDir);
-
   return 0;
 }

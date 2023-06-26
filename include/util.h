@@ -12,7 +12,8 @@ Tree *readPages(char *mainDir, int *pgCount);
 void readGraph(Tree * root, char * mainDir);
 
 void pageRanking(int pageAmount, Tree* pageTree);
-// void indexer();
+
+void indexer();
 // void consult();
 
 #endif // !UTIL_H

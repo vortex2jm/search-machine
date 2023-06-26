@@ -3,6 +3,7 @@
 #include "../include/page.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void setPageRankCallback(void* node, void* PR){
   Tree* castTree = node;
@@ -107,8 +108,18 @@ void pageRanking(int pageAmount, Tree* pageTree) {
 }
 
 //================//
+//Deals with stopWords and main symbol table
+//relevant files: stopwords.txt, pages files in ./pages
+//TODO: deal with % in end of reading
 void indexer(){
-  // TODO
+  //first step: create stopwords symbol table with key = value
+  FILE* stopWordsFile = fopen("./test/stopwords.txt", "r");
+  char* currentWord = NULL;
+  size_t size =0;
+  while(getline(&currentWord, &size, stopWordsFile) != -1){
+    printf("%s", currentWord);
+  }
+  fclose(stopWordsFile);
 }
 
 //================//
