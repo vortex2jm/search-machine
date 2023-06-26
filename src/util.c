@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 //============================//
-Tree *readPages(char * mainDir){  
+Tree *readPages(char *mainDir, int *pgCount){  
   char fileName[100];
   sprintf(fileName,"%s/%s", mainDir, PAGES_FILE);
   FILE * pagesFile = fopen(fileName, "r");
@@ -19,13 +19,25 @@ Tree *readPages(char * mainDir){
     fscanf(pagesFile,"%[^\n]\n", line);
     pg = createPage(line);
     tree = treeInsert(tree, line, pg, pageComparator);
+    pagesCounting++;
   }
+
+  *pgCount = pagesCounting;
   return tree;
+}
+
+//=======================//
+void readGraph(Tree * root, char * mainDir){
+  char fileName[100];
+  sprintf(fileName,"%s/%s", mainDir, GRAPH_FILE);
+  FILE * graphFile = fopen(fileName, "r");
+
 }
 
 //================//
 void pageRanking() {
   // TODO
+  //Inicio de valor inicial  
 }
 
 //================//

@@ -14,10 +14,11 @@ int main(int argc, char *argv[]) {
   }
 
   // Data reading============//
+  int pagesAmount=0;
   char *mainDir = strdup(argv[1]);
-  Tree * pageTree = readPages(mainDir);
+  Tree * pageTree = readPages(mainDir, &pagesAmount);
   treeTraversalInOrder(pageTree, printPage);  // For debug
-
+  
   // Data processing=========//
 
   // Consult reading=========//
