@@ -44,7 +44,10 @@ Tree * getPagesOut(Page * p){ return p->outPages; }
 void setPagesOut(Page * p, Tree * node){ p->outPages = node; }
 
 //=============================================//
-void setPagesInSize(Page * p, int size){ p->inPagesSize = size; }
+void setPagesIn(Page * p, Tree * node){ p->inPages = node; }
+
+//=============================================//
+void setPagesInSize(Page * p){ p->inPagesSize += 1; }
 
 //=============================================//
 void setPagesOutSize(Page * p, int size){ p->outPagesSize = size; }

@@ -21,7 +21,9 @@ Tree * getPagesOut(Page * p);
 
 void setPagesOut(Page * p, Tree * node);
 
-void setPagesInSize(Page * p, int size);
+void setPagesIn(Page * p, Tree * node);
+
+void setPagesInSize(Page * p);
 
 void setPagesOutSize(Page * p, int size);
 

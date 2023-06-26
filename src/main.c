@@ -9,6 +9,8 @@ void printOut(void * v,void * argument){
   Page * p = treeGetValue((Tree*)v);
   printf("PAGINAS QUE SAEM DA PAGINA %s\n", getPageName(p));
   treeTraversalInOrder(getPagesOut(p), printPage, NULL);
+  printf("PAGINAS QUE ENTRAM DA PAGINA %s\n", getPageName(p));
+  treeTraversalInOrder(getPagesIn(p), printPage, NULL);
 }
 
 int main(int argc, char *argv[]) {

@@ -41,12 +41,11 @@ void readGraph(Tree * root, char * mainDir){
   FILE * graphFile = fopen(fileName, "r");
 
   // Processing======//
-  int tokCounter=0;
-  char *line = NULL;
-  char *token = NULL;
   size_t size = 0;
-  Tree *currentNode = NULL, *outPages = NULL, *inPages=NULL;
-  Page * currentPage = NULL;
+  int tokCounter=0;
+  char *line = NULL, *token = NULL, *currentKey=NULL;
+  Page * currentPage = NULL, *pageDest = NULL;
+  Tree *currentNode = NULL, *outPages = NULL, *destInPages=NULL;
 
   while(getline(&line, &size, graphFile) != -1){
     // printf("%s", line);
@@ -66,8 +65,12 @@ void readGraph(Tree * root, char * mainDir){
       }
       else{
         // inserindo páginas que saem da página atual
-        outPages = treeInsert(outPages, token, treeGetValue(treeSearch(root, token)), pageComparatorByName);
-        // AINDA FALTA ATUALIZAR AS PAGINAS QUE ENTRAM NA QUE SAI DAQUI
+        pageDest = treeGetValue(treeSearch(root, token)); //Página que sai da atual
+        outPages = treeInsert(outPages, token, pageDest, pageComparatorByName); // Árvore de páginas que saem da atual
+        setPagesInSize(pageDest); //Somando +1 nas páginas que saem da página que está saindo da atual
+        destInPages = getPagesIn(pageDest); //Atualizando a árvore das páginas que saem da página que está saindo da atual
+        destInPages = treeInsert(destInPages, getPageName(currentPage), currentPage, pageComparatorByName);
+        setPagesIn(pageDest, destInPages);
       }
       token = strtok(NULL, " \n");
       tokCounter++;
