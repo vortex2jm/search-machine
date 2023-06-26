@@ -34,8 +34,23 @@ void setPageRank(Page *p, double pr) { p->pageRank = pr; }
 //===================================//
 char *getPageName(Page *p) { return p->pageName; }
 
+//=============================================//
+Tree * getPagesIn(Page * p){ return p->inPages; }
+
+//=============================================//
+Tree * getPagesOut(Page * p){ return p->outPages; }
+
+//=============================================//
+void setPagesOut(Page * p, Tree * node){ p->outPages = node; }
+
+//=============================================//
+void setPagesInSize(Page * p, int size){ p->inPagesSize = size; }
+
+//=============================================//
+void setPagesOutSize(Page * p, int size){ p->outPagesSize = size; }
+
 //===================================//
-int pageComparator(void *p1, void *p2) {
+int pageComparatorByPageRanking(void *p1, void *p2) {
   Page *pg1 = p1;
   Page *pg2 = p2;
 
@@ -46,10 +61,18 @@ int pageComparator(void *p1, void *p2) {
   return 1;
 }
 
+//===========================================//
+int pageComparatorByName(void * p1, void * p2){
+  Page *pg1 = p1;
+  Page *pg2 = p2;
+  return strcasecmp(pg1->pageName, pg2->pageName);
+}
+
 //========================//
 void printPage(void * page){
-  Page * pg = page;
-  printf("Page name: %s ; Page rank = %lf\n", pg->pageName, pg->pageRank);
+  Page * pg = treeGetValue((Tree*)page);
+  // Page * pg = page;
+  printf("Page name: %s ; Page rank = %lf, outPages = %d\n", pg->pageName, pg->pageRank, pg->outPagesSize);
 }
 
 //===================================//
