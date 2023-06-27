@@ -40,7 +40,7 @@ Tree *readPages(char *mainDir, int *pgCount) {
   while (!feof(pagesFile)) {
     fscanf(pagesFile, "%[^\n]\n", line);
     pg = createPage(line);
-    tree = treeInsert(tree, line, pg, pageComparatorByName, KEY_COMPARE);
+    tree = treeInsert(tree, line, pg, pageComparatorByName, BY_KEY);
     pagesCounting++;
   }
   *pgCount = pagesCounting;
@@ -49,6 +49,7 @@ Tree *readPages(char *mainDir, int *pgCount) {
 }
 
 //========================================//
+//TODO
 void readGraph(Tree *root, char *mainDir) {
   // File reading
   char fileName[100];
@@ -68,19 +69,16 @@ void readGraph(Tree *root, char *mainDir) {
     while (token) {
       if (!tokCounter) {
         // Pegando o nó da árvore que contém a página com o primeiro nome da linha
-        currentNode = treeSearch(root, token);
-        currentPage = treeGetValue(currentNode);
+        currentPage = treeSearch(root, token, BY_VALUE);
+        //currentPage = treeGetValue(currentNode);
         outPages = getPagesOut(currentPage);
       } else if (tokCounter == 1) {
         // Settando a quantidade de nós que saem dessa página
         setPagesOutSize(currentPage, atoi(token));
       } else {
         // inserindo páginas que saem da página atual
-        pageDest =
-            treeGetValue(treeSearch(root, token)); // Página que sai da atual
-        outPages =
-            treeInsert(outPages, token, pageDest, pageComparatorByName,
-                       KEY_COMPARE); // Árvore de páginas que saem da atual
+        pageDest = treeSearch(root, token, BY_VALUE); // Página que sai da atual
+        outPages = treeInsert(outPages, token, pageDest, pageComparatorByName, BY_KEY); // Árvore de páginas que saem da atual
         setPagesInSize(pageDest); // Somando +1 nas páginas que saem da página q
                                   // e está saindo da atual
         destInPages =
@@ -88,7 +86,7 @@ void readGraph(Tree *root, char *mainDir) {
                                   //  página que está saindo da atual
         destInPages =
             treeInsert(destInPages, getPageName(currentPage), currentPage,
-                       pageComparatorByName, KEY_COMPARE);
+                       pageComparatorByName, BY_KEY);
         setPagesIn(pageDest, destInPages);
       }
       token = strtok(NULL, " \n");
@@ -131,7 +129,7 @@ stopWordTree *buildStopWordsTree() {
   while (getline(&currentWord, &size, stopWordsFile) != -1) {
     currentWord = strtok(currentWord, " \n");
     // printf("%s\n", currentWord); //for debug
-    root = treeInsert(root, currentWord, currentWord,stopWordsCompare, KEY_COMPARE);
+    root = treeInsert(root, currentWord, currentWord,stopWordsCompare, BY_KEY);
   }
   free(currentWord);
   fclose(stopWordsFile);
@@ -159,9 +157,13 @@ termsTree *buildTermsTree(Tree *pages, stopWordTree *stopwords) {
     while (getline(&line, &size, page) != -1) {
       char *word = strtok(line, " \n\t");
       // se a word não estiver na árvore de stopwords
-      if (treeSearch(stopwords, word) == NULL) {
-        currentPage = treeGetValue(treeSearch(pages, currentFile));
-        terms = termsTreeInsert(terms, word, currentPage, KEY_COMPARE);
+      if (treeSearch(stopwords, word, BY_KEY) == NULL) {
+        //podemos inserir na tabela de termos
+        //TODO: REPENSAR IMPLEMENTAÇÃO URGENTE!!
+
+        currentPage = treeSearch(pages, currentFile, BY_VALUE); //obtem o ponteiro da pagina atual
+        //terms = termsTreeInsert(terms, word, currentPage, BY_KEY);
+        terms = treeInsert(terms, word, currentPage, termsTreeCompare, BY_KEY);
       }
     }
     free(pageDir);

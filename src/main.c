@@ -24,6 +24,10 @@ int main(int argc, char *argv[]) {
   readGraph(pageTree, mainDir);
   //treeTraversalInOrder(pageTree, printOut, NULL);  // For debug
 
+  // Data processing=========//
+  //PR math
+  pageRanking(pagesAmount, pageTree);
+  //treeTraversalInOrder(pageTree, printPage, NULL);
 
   //====================================================//
   //building main symbol table
@@ -32,11 +36,6 @@ int main(int argc, char *argv[]) {
   //TODO: create terms symbol table, must think about implementation
   //====================================================//
 
-
-  // Data processing=========//
-  //PR math
-  pageRanking(pagesAmount, pageTree);
-  //treeTraversalInOrder(pageTree, printPage, NULL);
 
   // Consult reading=========//
 
