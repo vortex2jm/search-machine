@@ -8,6 +8,8 @@ typedef Tree termsTree;
 
 void* termsTreeGetValue(termsTree* node);
 
+int termsTreeCompare(void* c1, void* c2);
+
 termsTree* termsTreeSearch(Tree* root, char* key);
 
 termsTree* termsTreeInsert(termsTree* node, char* key, Page* value, int compareMode);
