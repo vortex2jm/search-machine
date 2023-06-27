@@ -30,7 +30,7 @@ Tree *readPages(char *mainDir, int *pgCount){
   while(!feof(pagesFile)){
     fscanf(pagesFile,"%[^\n]\n", line);
     pg = createPage(line);
-    tree = treeInsert(tree, line, pg, pageComparatorByName);
+    tree = treeInsert(tree, line, pg, pageComparatorByName, KEY_COMPARE);
     pagesCounting++;
   }
 
@@ -71,10 +71,10 @@ void readGraph(Tree * root, char * mainDir){
       else{
         // inserindo páginas que saem da página atual
         pageDest = treeGetValue(treeSearch(root, token)); //Página que sai da atual
-        outPages = treeInsert(outPages, token, pageDest, pageComparatorByName); // Árvore de páginas que saem da atual
+        outPages = treeInsert(outPages, token, pageDest, pageComparatorByName, KEY_COMPARE); // Árvore de páginas que saem da atual
         setPagesInSize(pageDest); //Somando +1 nas páginas que saem da página que está saindo da atual
         destInPages = getPagesIn(pageDest); //Atualizando a árvore das páginas que saem da página que está saindo da atual
-        destInPages = treeInsert(destInPages, getPageName(currentPage), currentPage, pageComparatorByName);
+        destInPages = treeInsert(destInPages, getPageName(currentPage), currentPage, pageComparatorByName, KEY_COMPARE);
         setPagesIn(pageDest, destInPages);
       }
       token = strtok(NULL, " \n");
@@ -118,7 +118,8 @@ stopWordTree* buildStopWordsTree(){
 
   while(getline(&currentWord, &size, stopWordsFile) != -1){
     currentWord = strtok(currentWord, " \n");
-    root = stopWordTreeInsert(root, currentWord);
+    //printf("%s\n", currentWord); //for debug
+    root = stopWordTreeInsert(root, currentWord, KEY_COMPARE);
   }
 
   free(currentWord);
@@ -131,6 +132,8 @@ termsTree* buildTermsTree(Tree* pages, stopWordTree* stopwords){
   FILE* indexFile = fopen("./tests/index.txt", "r"); 
   char* currentFile = NULL; size_t size = 0;
   termsTree* terms = NULL;
+  Page* currentPage = NULL;
+
 
   //percorre o conjunto de arquivos
   while(getline(&currentFile, &size, indexFile) != -1){
@@ -146,7 +149,8 @@ termsTree* buildTermsTree(Tree* pages, stopWordTree* stopwords){
 
       // se a word não estiver na árvore de stopwords
       if(stopWordTreeSearch(stopwords, word) == NULL){
-        terms = termsTreeInsert(terms, word, pages, currentFile);  
+        currentPage = treeGetValue(treeSearch(pages, currentFile));
+        terms = termsTreeInsert(terms, word, currentPage, KEY_COMPARE);  
       } 
 
     }
@@ -158,9 +162,6 @@ termsTree* buildTermsTree(Tree* pages, stopWordTree* stopwords){
   fclose(indexFile);  
   return terms;
 }
-
-
-
 
 //================//
 void consult(){

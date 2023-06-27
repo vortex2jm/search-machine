@@ -5,11 +5,10 @@ static int termsTreeCompare(void* c1, void* c2){
     return strcasecmp((char*)c1, (char*)c2);
 }
 
-termsTree* termsTreeInsert(termsTree* node, char* key, Tree* value, Page* p){
-    //return treeInsert(node, key, value, termsTreeCompare);
-    termsTree* root = (node, key, value, termsTreeCompare);//insere o termo atual
+termsTree* termsTreeInsert(termsTree* node, char* key, Page* p, int compareMode){
+    termsTree* root = treeInsert(node, key, NULL, termsTreeCompare, compareMode);//insere o termo atual com valor nulo
     termsTree* aux = treeSearch(aux, key); //encontramos o nó do termo atual
-    treeInsert(treeGetValue(aux), getPageName(p), p, pageComparatorByName);
+    treeInsert(treeGetValue(aux), getPageName(p), p, pageComparatorByName, compareMode); //insere a pagina na arvore de paginas
 
     return root;
 }

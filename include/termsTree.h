@@ -6,7 +6,7 @@
 
 typedef Tree termsTree; 
 
-termsTree* termsTreeInsert(termsTree* node, char* key, Tree* value, Page* p);
+termsTree* termsTreeInsert(termsTree* node, char* key, Page* value, int compareMode);
 
 termsTree* termsTreeSearch(Tree* root, char* key);
 

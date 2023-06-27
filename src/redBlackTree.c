@@ -9,6 +9,8 @@
 #define RED true
 #define BLACK false
 
+
+
 struct node{
   char *key;
   void *value;
@@ -25,19 +27,29 @@ Tree *rotateRight(Tree *node);
 void* treeGetValue(Tree* node);
 Tree* treeSearch(Tree* root, char* key);
 Tree* treeCreateNode(char* key, void* value, bool color);
+Tree* treeInsert(Tree* node, char* key, void* value, CompareCallback function, int compareMode);
 void treeTraversalInOrder(Tree * node, TraversalCallback function, void * argument);
-Tree* treeInsert(Tree* node, char* key, void* value, CompareCallback function);
 
 // Implementation =====================================//
 //=====================================================//
-Tree* treeInsert(Tree* node, char* key, void* value, CompareCallback function){
+Tree* treeInsert(Tree* node, char* key, void* value, CompareCallback function, int compareMode){
   // Insert at bottom and color it red.
   if (node == NULL) { return treeCreateNode(key, value, RED); }
   
-  int cmp = function(value, node->value);
+  int cmp;
+  if(compareMode == KEY_COMPARE){
+    cmp = function(key, node->key);
+  }
+  else if(compareMode == VALUE_COMPARE){
+    cmp = function(value, node->value);
+  }
+  else{
+    printf("merda na inserção, otário\n");
+    exit(1);
+  }
 
-  if (cmp < 0) { node->left = treeInsert(node->left, key, value, function); } 
-  else if (cmp > 0) { node->right = treeInsert(node->right, key, value, function); }
+  if (cmp < 0) { node->left = treeInsert(node->left, key, value, function, compareMode); } 
+  else if (cmp > 0) { node->right = treeInsert(node->right, key, value, function, compareMode); }
   else { node->value = value; } 
 
   // Lean left.
@@ -68,16 +80,24 @@ void* treeGetValue(Tree* node){
 }
 
 //======================================================//
-//TODO: COLOCAR CALLBACK
 void treeTraversalInOrder(Tree * node, TraversalCallback function, void * argument){
   if(!node){
     return;
   }
-  
+
   treeTraversalInOrder(node->left, function, argument);
   function(node, argument);
   treeTraversalInOrder(node->right, function, argument);
 }
+
+Tree* getleftNode(Tree* node){
+  return node->left;
+}
+
+Tree* getRightNode(Tree* node){
+  return node->right;
+}
+
 
 //=======================//
 void treeFree(Tree* root){
@@ -135,4 +155,8 @@ Tree *rotateLeft(Tree *node) {
   aux->color = aux->left->color;
   aux->left->color = RED;
   return aux;
+}
+
+char* treeGetKey(Tree *node){
+  return node->key;
 }

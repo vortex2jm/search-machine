@@ -25,10 +25,11 @@ int main(int argc, char *argv[]) {
   // Data reading============//
   int pagesAmount=0;
   char *mainDir = strdup(argv[1]);
-  Tree * pageTree = readPages(mainDir, &pagesAmount);
+  //Tree * pageTree = readPages(mainDir, &pagesAmount);
   //treeTraversalInOrder(pageTree, printPage, NULL);  // For debug
-  readGraph(pageTree, mainDir);
+  //readGraph(pageTree, mainDir);
   stopWordTree* stopwords = buildStopWordsTree();
+  stopWordtreeTraversalInOrder(stopwords); // For debug
   //treeTraversalInOrder(pageTree, printOut, NULL);  // For debug
 
 
