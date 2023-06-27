@@ -1,17 +1,17 @@
 #ifndef TERMSTREE_H
 #define TERMSTREE_H
 
-#include "../include/redBlackTree.h"
 #include "../include/page.h"
+#include "../include/redBlackTree.h"
 
 typedef Tree termsTree; 
 
-termsTree* termsTreeInsert(termsTree* node, char* key, Page* value, int compareMode);
+void* termsTreeGetValue(termsTree* node);
 
 termsTree* termsTreeSearch(Tree* root, char* key);
 
-void* termsTreeGetValue(termsTree* node);
+termsTree* termsTreeInsert(termsTree* node, char* key, Page* value, int compareMode);
 
-void termsTreeFree(termsTree* root);
+// void termsTreeFree(termsTree* root);
 
 #endif 

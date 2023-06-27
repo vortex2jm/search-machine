@@ -1,5 +1,5 @@
-#include "../include/termsTree.h"
 #include <strings.h>
+#include "../include/termsTree.h"
 
 static int termsTreeCompare(void* c1, void* c2){
     return strcasecmp((char*)c1, (char*)c2);
@@ -21,6 +21,6 @@ void* termsTreeGetValue(termsTree* node){
     return treeGetValue(node);
 }
 
-void termsTreeFree(termsTree* root){
-    treeFree(root);
-}
+// void termsTreeFree(termsTree* root){
+//     treeFree(root);
+// }
