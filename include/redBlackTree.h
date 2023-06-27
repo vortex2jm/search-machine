@@ -4,8 +4,8 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define KEY_COMPARE 1
-#define VALUE_COMPARE 0
+#define BY_KEY 1
+#define BY_VALUE 0
 
 typedef struct node Tree;
 
@@ -21,7 +21,8 @@ char *treeGetKey(Tree *node);
 void *treeGetValue(Tree *node);
 
 // Procura um nó na árvore através de uma chave
-Tree *treeSearch(Tree *root, char *key);
+//retorna o valor ou a chave, dependendo do parametro returnMode
+void *treeSearch(Tree *root, char *key, int returnMode);
 
 // Libera memória alocada para uma árvore. Usa uma função de callback para desalocar o valor
 // Caso a função seja nula, desaloca só os nós da árvore
@@ -32,5 +33,6 @@ void treeTraversalInOrder(Tree *node, TraversalCallback function, void *argument
 
 // Insere um novo nó na árvore 
 Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function, int compareMode);
+
 
 #endif

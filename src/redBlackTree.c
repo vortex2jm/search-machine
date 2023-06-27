@@ -21,8 +21,7 @@ bool isRed(Tree *node);
 void colorFlip(Tree *node);
 Tree *rotateLeft(Tree *node);
 Tree *rotateRight(Tree *node);
-void *treeGetValue(Tree *node);
-Tree *treeSearch(Tree *root, char *key);
+void *treeSearch(Tree *root, char *key, int returnMode);
 void treeFree(Tree *root, DeallocCallback function);
 Tree *treeCreateNode(char *key, void *value, bool color);
 Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function, int compareMode);
@@ -38,9 +37,9 @@ Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function,
   }
 
   int cmp;
-  if (compareMode == KEY_COMPARE) {
+  if (compareMode == BY_KEY) {
     cmp = function(key, node->key);
-  } else if (compareMode == VALUE_COMPARE) {
+  } else if (compareMode == BY_VALUE) {
     cmp = function(value, node->value);
   } else {
     printf("merda na inserção, otário\n");
@@ -74,7 +73,7 @@ Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function,
 // Adicionar callback futuramente para busca de arvores ordenadas por page
 // ranking
 // 
-Tree *treeSearch(Tree *root, char *key) {
+void *treeSearch(Tree *root, char *key, int returnMode) {
   while (root != NULL) {
     int cmp = strcasecmp(key, root->key);
     if (cmp < 0)
@@ -82,8 +81,18 @@ Tree *treeSearch(Tree *root, char *key) {
     else if (cmp > 0)
       root = root->right;
     else
-      return root;
+      if(returnMode == BY_KEY){
+        return root->key;
+      }
+      else if(returnMode == BY_VALUE){
+        return root->value;
+      }
+      else{
+        printf("ALGO DEU ERRADO, RETORNO NULO\n");
+        return NULL;
+      }
   }
+  //if not found
   return NULL;
 }
 
