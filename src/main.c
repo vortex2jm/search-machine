@@ -7,14 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void printOut(void * v,void * argument){
-  Page * p = treeGetValue((Tree*)v);
-  printf("PAGINAS QUE SAEM DA PAGINA %s\n", getPageName(p));
-  treeTraversalInOrder(getPagesOut(p), printPage, NULL);
-  printf("PAGINAS QUE ENTRAM DA PAGINA %s\n", getPageName(p));
-  treeTraversalInOrder(getPagesIn(p), printPage, NULL);
-}
-
 int main(int argc, char *argv[]) {
   // Validation =============//
   if (argc < 2) {
@@ -25,22 +17,30 @@ int main(int argc, char *argv[]) {
   // Data reading============//
   int pagesAmount=0;
   char *mainDir = strdup(argv[1]);
-  //Tree * pageTree = readPages(mainDir, &pagesAmount);
+
+  Tree * pageTree = readPages(mainDir, &pagesAmount);
   //treeTraversalInOrder(pageTree, printPage, NULL);  // For debug
-  //readGraph(pageTree, mainDir);
-  stopWordTree* stopwords = buildStopWordsTree();
-  stopWordtreeTraversalInOrder(stopwords); // For debug
+  readGraph(pageTree, mainDir);
   //treeTraversalInOrder(pageTree, printOut, NULL);  // For debug
 
 
+  //====================================================//
+  // stopWordTree* stopwords = buildStopWordsTree();
+  // stopWordtreeTraversalInOrder(stopwords); // For debug
+  //====================================================//
+
+
   // Data processing=========//
-  //pageRanking(pagesAmount, pageTree);
-  //treeTraversalInOrder(pageTree, printPage, NULL);
+  pageRanking(pagesAmount, pageTree);
+  treeTraversalInOrder(pageTree, printPage, NULL);
 
   // Consult reading=========//
 
   // Consult processing======//
 
+  // Dealloc ================//
+  treeFree(pageTree, freePage);
   free(mainDir);
+  
   return 0;
 }

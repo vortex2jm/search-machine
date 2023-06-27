@@ -1,6 +1,6 @@
-#include "../include/stopWordsTree.h" 
-#include <strings.h>
 #include <stdio.h>
+#include <strings.h>
+#include "../include/stopWordsTree.h" 
 
 static int stopWordsCompare(void* c1, void* c2){
     return strcasecmp((char*) c1,(char*) c2);
@@ -31,6 +31,6 @@ char* stopWordGetValue(stopWordTree * node){
     return (char*) treeGetKey(node);
 }
 
-void stopWordTreeFree(stopWordTree* root){
-    treeFree(root);
-}
+// void stopWordTreeFree(stopWordTree* root){
+//     treeFree(root);
+// }
