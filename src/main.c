@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
   int pagesAmount=0;
   char *mainDir = strdup(argv[1]);
 
+  //building pages symbol table
   Tree * pageTree = readPages(mainDir, &pagesAmount);
   //treeTraversalInOrder(pageTree, printPage, NULL);  // For debug
   readGraph(pageTree, mainDir);
@@ -25,14 +26,17 @@ int main(int argc, char *argv[]) {
 
 
   //====================================================//
-  // stopWordTree* stopwords = buildStopWordsTree();
-  // stopWordtreeTraversalInOrder(stopwords); // For debug
+  //building main symbol table
+  Tree* stopwords = buildStopWordsTree();
+  treeTraversalInOrder(stopwords, printStopWord, NULL); // For debug
+  //TODO: create terms symbol table, must think about implementation
   //====================================================//
 
 
   // Data processing=========//
+  //PR math
   pageRanking(pagesAmount, pageTree);
-  treeTraversalInOrder(pageTree, printPage, NULL);
+  //treeTraversalInOrder(pageTree, printPage, NULL);
 
   // Consult reading=========//
 
@@ -40,6 +44,7 @@ int main(int argc, char *argv[]) {
 
   // Dealloc ================//
   treeFree(pageTree, freePage);
+  treeFree(stopwords, NULL);
   free(mainDir);
   
   return 0;

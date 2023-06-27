@@ -5,16 +5,8 @@
 
 typedef Tree stopWordTree;
 
-char* stopWordGetValue(stopWordTree * node);
+int stopWordsCompare(void* c1, void* c2);
 
-char* stopWordTreeGetValue(stopWordTree* node);
-
-void stopWordtreeTraversalInOrder(stopWordTree *node);
-
-stopWordTree* stopWordTreeSearch(stopWordTree* root, char* key);
-
-stopWordTree* stopWordTreeInsert(stopWordTree* node, char* key, int compareMode);
-
-// void stopWordTreeFree(stopWordTree* root);
+void printStopWord(void* node, void* arg);
 
 #endif

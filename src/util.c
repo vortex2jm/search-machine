@@ -131,7 +131,7 @@ stopWordTree *buildStopWordsTree() {
   while (getline(&currentWord, &size, stopWordsFile) != -1) {
     currentWord = strtok(currentWord, " \n");
     // printf("%s\n", currentWord); //for debug
-    root = stopWordTreeInsert(root, currentWord, KEY_COMPARE);
+    root = treeInsert(root, currentWord, currentWord,stopWordsCompare, KEY_COMPARE);
   }
   free(currentWord);
   fclose(stopWordsFile);
@@ -159,7 +159,7 @@ termsTree *buildTermsTree(Tree *pages, stopWordTree *stopwords) {
     while (getline(&line, &size, page) != -1) {
       char *word = strtok(line, " \n\t");
       // se a word não estiver na árvore de stopwords
-      if (stopWordTreeSearch(stopwords, word) == NULL) {
+      if (treeSearch(stopwords, word) == NULL) {
         currentPage = treeGetValue(treeSearch(pages, currentFile));
         terms = termsTreeInsert(terms, word, currentPage, KEY_COMPARE);
       }
