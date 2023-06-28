@@ -1,2 +1,6 @@
 trab3
 obj/
+.vscode/
+tests/
+test/
+test2/
