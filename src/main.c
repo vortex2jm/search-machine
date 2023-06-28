@@ -1,7 +1,8 @@
 #include "../include/page.h"
-#include "../include/util.h"
 #include "../include/redBlackTree.h"
+#include "../include/searchMachine.h"
 #include "../include/stopWordsTree.h"
+#include "../include/util.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,37 +15,38 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  // Data reading============//
-  int pagesAmount=0;
+  //=================//
+  int pagesAmount = 0;
   char *mainDir = strdup(argv[1]);
 
-  //building pages symbol table
-  Tree * pageTree = readPages(mainDir, &pagesAmount);
-  //treeTraversalInOrder(pageTree, printPage, NULL);  // For debug
-  readGraph(pageTree, mainDir);
-  //treeTraversalInOrder(pageTree, printOut, NULL);  // For debug
+  // Construindo árvore de páginas
+  pagesTree *pages = buildPagesTree(mainDir, &pagesAmount);
+  treeTraversalInOrder(pages, printPage, NULL); // For debug
 
-  // Data processing=========//
-  //PR math
-  pageRanking(pagesAmount, pageTree);
-  //treeTraversalInOrder(pageTree, printPage, NULL);
+  // Inserindo links entre páginas
+  linkPages(pages, mainDir);
+  treeTraversalInOrder(pages, printOut, NULL); // For debug
+
+  // Calculando page ranking
+  pageRanking(pagesAmount, pages);
+  treeTraversalInOrder(pages, printPage, NULL);
 
   //====================================================//
-  //building main symbol table
-  Tree* stopwords = buildStopWordsTree();
+  // Construindo árvore de stop words
+  stopWordTree *stopwords = buildStopWordsTree(mainDir);
   treeTraversalInOrder(stopwords, printStopWord, NULL); // For debug
-  //TODO: create terms symbol table, must think about implementation
-  //====================================================//
 
+  // TODO: create terms symbol table, must think about implementation
+  //====================================================//
 
   // Consult reading=========//
 
   // Consult processing======//
 
   // Dealloc ================//
-  treeFree(pageTree, freePage);
+  treeFree(pages, freePage);
   treeFree(stopwords, NULL);
   free(mainDir);
-  
+
   return 0;
 }
