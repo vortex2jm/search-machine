@@ -1,34 +1,25 @@
 #include "../include/util.h"
 #include "../include/page.h"
-#include "../include/termsTree.h"
 #include "../include/redBlackTree.h"
 #include "../include/stopWordsTree.h"
+#include "../include/termsTree.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 // Protótipos================================//
-stopWordTree *buildStopWordsTree();
-void readGraph(Tree *root, char *mainDir);
-Tree *readPages(char *mainDir, int *pgCount);
-void setPageRankCallback(void *node, void *PR);
-void pageRanking(int pageAmount, Tree *pageTree);
-termsTree *buildTermsTree(Tree *pages, stopWordTree *stopwords);
+stopWordTree *buildStopWordsTree(char *mainDir);
+void linkPages(pagesTree *root, char *mainDir);
+pagesTree *buildPagesTree(char *mainDir, int *pgCount);
+termsTree *buildTermsTree(pagesTree *pages, stopWordTree *stopwords,
+                          char *mainDir);
+void printOut(void *v, void *argument);
 
 // Implementação=============================//
 //===========================================//
-void setPageRankCallback(void *node, void *PR) {
-  Tree *castTree = node;
-  Page *castPage = treeGetValue(castTree);
-  double *PRDouble = PR;
-  setPageRank(castPage, *PRDouble);
-  setLastPageRank(castPage, *PRDouble);
-}
-
-//===========================================//
-Tree *readPages(char *mainDir, int *pgCount) {
-  char fileName[100];
+pagesTree *buildPagesTree(char *mainDir, int *pgCount) {
+  char fileName[100] = "";
   sprintf(fileName, "%s/%s", mainDir, PAGES_FILE);
   FILE *pagesFile = fopen(fileName, "r");
 
@@ -49,8 +40,7 @@ Tree *readPages(char *mainDir, int *pgCount) {
 }
 
 //========================================//
-//TODO
-void readGraph(Tree *root, char *mainDir) {
+void linkPages(pagesTree *root, char *mainDir) {
   // File reading
   char fileName[100];
   sprintf(fileName, "%s/%s", mainDir, GRAPH_FILE);
@@ -68,9 +58,10 @@ void readGraph(Tree *root, char *mainDir) {
     tokCounter = 0;
     while (token) {
       if (!tokCounter) {
-        // Pegando o nó da árvore que contém a página com o primeiro nome da linha
+        // Pegando o nó da árvore que contém a página com o primeiro nome da
+        // linha
         currentPage = treeSearch(root, token, BY_VALUE);
-        //currentPage = treeGetValue(currentNode);
+        // currentPage = treeGetValue(currentNode);
         outPages = getPagesOut(currentPage);
       } else if (tokCounter == 1) {
         // Settando a quantidade de nós que saem dessa página
@@ -78,15 +69,15 @@ void readGraph(Tree *root, char *mainDir) {
       } else {
         // inserindo páginas que saem da página atual
         pageDest = treeSearch(root, token, BY_VALUE); // Página que sai da atual
-        outPages = treeInsert(outPages, token, pageDest, pageComparatorByName, BY_KEY); // Árvore de páginas que saem da atual
+        outPages = treeInsert(outPages, token, pageDest, pageComparatorByName,
+                              BY_KEY); // Árvore de páginas que saem da atual
         setPagesInSize(pageDest); // Somando +1 nas páginas que saem da página q
                                   // e está saindo da atual
         destInPages =
             getPagesIn(pageDest); // Atualizando a árvore das páginas que saem d
                                   //  página que está saindo da atual
-        destInPages =
-            treeInsert(destInPages, getPageName(currentPage), currentPage,
-                       pageComparatorByName, BY_KEY);
+        destInPages = treeInsert(destInPages, getPageName(currentPage),
+                                 currentPage, pageComparatorByName, BY_KEY);
         setPagesIn(pageDest, destInPages);
       }
       token = strtok(NULL, " \n");
@@ -98,30 +89,13 @@ void readGraph(Tree *root, char *mainDir) {
   free(line);
 }
 
-//===============================================//
-void pageRanking(int pageAmount, Tree *pageTree) {
-  // Inicio de valor inicial
-  double firstPR = 1.0 / (double)pageAmount;
-  treeTraversalInOrder(pageTree, setPageRankCallback, &firstPR);
-
-  double variables[2];
-  variables[0] = (double)pageAmount;
-  variables[1] = 1.0;
-
-  // Atualização
-  while (variables[1] >= PGR_LIMIT) {
-    variables[1] = 0.0;
-    treeTraversalInOrder(pageTree, calculatePageRank, variables);
-    treeTraversalInOrder(pageTree, updatePageRank, NULL);
-    variables[1] /= pageAmount;
-  }
-}
-
 // builds symbol table with stopwords.txt
 // returns the root to the table
 //=================================//
-stopWordTree *buildStopWordsTree() {
-  FILE *stopWordsFile = fopen("./tests/stopwords.txt", "r");
+stopWordTree *buildStopWordsTree(char *mainDir) {
+  char fileName[100];
+  sprintf(fileName, "%s/%s", mainDir, STOP_WORDS_FILE);
+  FILE *stopWordsFile = fopen(fileName, "r");
   char *currentWord = NULL;
   size_t size = 0;
   stopWordTree *root = NULL;
@@ -129,7 +103,7 @@ stopWordTree *buildStopWordsTree() {
   while (getline(&currentWord, &size, stopWordsFile) != -1) {
     currentWord = strtok(currentWord, " \n");
     // printf("%s\n", currentWord); //for debug
-    root = treeInsert(root, currentWord, currentWord,stopWordsCompare, BY_KEY);
+    root = treeInsert(root, currentWord, currentWord, stopWordsCompare, BY_KEY);
   }
   free(currentWord);
   fclose(stopWordsFile);
@@ -138,7 +112,10 @@ stopWordTree *buildStopWordsTree() {
 }
 
 //==============================================================//
-termsTree *buildTermsTree(Tree *pages, stopWordTree *stopwords) {
+termsTree *buildTermsTree(pagesTree *pages, stopWordTree *stopwords,
+                          char *mainDir) {
+  char fileName[100] = "";
+  sprintf(fileName, "%s/%s", mainDir, PAGES_FILE);
   FILE *indexFile = fopen("./tests/index.txt", "r");
   char *currentFile = NULL;
   size_t size = 0;
@@ -158,11 +135,12 @@ termsTree *buildTermsTree(Tree *pages, stopWordTree *stopwords) {
       char *word = strtok(line, " \n\t");
       // se a word não estiver na árvore de stopwords
       if (treeSearch(stopwords, word, BY_KEY) == NULL) {
-        //podemos inserir na tabela de termos
-        //TODO: REPENSAR IMPLEMENTAÇÃO URGENTE!!
+        // podemos inserir na tabela de termos
+        // TODO: REPENSAR IMPLEMENTAÇÃO URGENTE!!
 
-        currentPage = treeSearch(pages, currentFile, BY_VALUE); //obtem o ponteiro da pagina atual
-        //terms = termsTreeInsert(terms, word, currentPage, BY_KEY);
+        currentPage = treeSearch(pages, currentFile,
+                                 BY_VALUE); // obtem o ponteiro da pagina atual
+        // terms = termsTreeInsert(terms, word, currentPage, BY_KEY);
         terms = treeInsert(terms, word, currentPage, termsTreeCompare, BY_KEY);
       }
     }
@@ -173,16 +151,11 @@ termsTree *buildTermsTree(Tree *pages, stopWordTree *stopwords) {
   return terms;
 }
 
-//=====================================//
-void printOut(void * v,void * argument){
-  Page * p = treeGetValue((Tree*)v);
+// Auxiliar=====================================//
+void printOut(void *v, void *argument) {
+  Page *p = treeGetValue((Tree *)v);
   printf("PAGINAS QUE SAEM DA PAGINA %s\n", getPageName(p));
   treeTraversalInOrder(getPagesOut(p), printPage, NULL);
   printf("PAGINAS QUE ENTRAM DA PAGINA %s\n", getPageName(p));
   treeTraversalInOrder(getPagesIn(p), printPage, NULL);
-}
-
-//=============//
-void consult() {
-  // TODO
 }
