@@ -21,24 +21,24 @@ int main(int argc, char *argv[]) {
 
   // Construindo árvore de páginas
   pagesTree *pages = buildPagesTree(mainDir, &pagesAmount);
-  treeTraversalInOrder(pages, printPage, NULL); // For debug
+  //treeTraversalInOrder(pages, printPage, NULL); // For debug
 
   // Inserindo links entre páginas
   linkPages(pages, mainDir);
-  treeTraversalInOrder(pages, printOut, NULL); // For debug
+  //treeTraversalInOrder(pages, printOut, NULL); // For debug
 
   // Calculando page ranking
   pageRanking(pagesAmount, pages);
-  treeTraversalInOrder(pages, printPage, NULL);
+  //treeTraversalInOrder(pages, printPage, NULL);
 
   //====================================================//
   // Construindo árvore de stop words
   stopWordTree *stopwords = buildStopWordsTree(mainDir);
-  treeTraversalInOrder(stopwords, printStopWord, NULL); // For debug
+  //treeTraversalInOrder(stopwords, printStopWord, NULL); // For debug
 
   // TODO: create terms symbol table, must think about implementation
   //====================================================//
-
+  termsTree* terms = buildTermsTree(pages, stopwords, mainDir);
   // Consult reading=========//
 
   // Consult processing======//
