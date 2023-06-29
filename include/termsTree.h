@@ -10,10 +10,8 @@ void* termsTreeGetValue(termsTree* node);
 
 int termsTreeCompare(void* c1, void* c2);
 
-termsTree* termsTreeSearch(Tree* root, char* key);
+void termTreePrintNode(void* value, void* arg);
 
-termsTree* termsTreeInsert(termsTree* node, char* key, Page* value, int compareMode);
-
-// void termsTreeFree(termsTree* root);
+void termTreeFreePagesTree(void* value); 
 
 #endif 

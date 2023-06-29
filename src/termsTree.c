@@ -5,7 +5,11 @@ int termsTreeCompare(void* c1, void* c2){
     return strcasecmp((char*)c1, (char*)c2);
 }
 
-//gets the pages tree that is the value of the node
-Tree* getPagesTree(Tree* root){
+void termTreePrintNode(void* value, void* arg){
+    printf("WORD:%s\n", treeGetKey((Tree*) value));
+    treeTraversalInOrder(treeGetValue(value), printPage, NULL);
+}
 
+void termTreeFreePagesTree(void* value){
+    treeFree(value, NULL);
 }
