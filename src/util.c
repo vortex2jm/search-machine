@@ -116,37 +116,32 @@ termsTree *buildTermsTree(pagesTree *pages, stopWordTree *stopwords,
                           char *mainDir) {
   char fileName[100] = "";
   sprintf(fileName, "%s/%s", mainDir, PAGES_FILE);
-  FILE *indexFile = fopen("./tests/index.txt", "r");
+  FILE *indexFile = fopen(fileName, "r");
   char *currentFile = NULL;
   size_t size = 0;
   termsTree *terms = NULL;
   Page *currentPage = NULL;
 
   // percorre o conjunto de arquivos
-  while (getline(&currentFile, &size, indexFile) != -1) {
+  while (getline(&currentFile, &size, indexFile) != -1){
     currentFile = strtok(currentFile, " \n");
-    char *pageDir = strdup(currentFile);
+    char pageDir[100] = "";
     sprintf(pageDir, "./tests/pages/%s", currentFile);
-
     FILE *page = fopen(pageDir, "r");
     char *line = NULL;
     // percorre um arquivo
     while (getline(&line, &size, page) != -1) {
       char *word = strtok(line, " \n\t");
-      // se a word não estiver na árvore de stopwords
-      if (treeSearch(stopwords, word, BY_KEY) == NULL) {
-        // podemos inserir na tabela de termos
-        // TODO: REPENSAR IMPLEMENTAÇÃO URGENTE!!
-
-        currentPage = treeSearch(pages, currentFile,
-                                 BY_VALUE); // obtem o ponteiro da pagina atual
-        // terms = termsTreeInsert(terms, word, currentPage, BY_KEY);
-        terms = treeInsert(terms, word, currentPage, termsTreeCompare, BY_KEY);
+      while(word){
+        printf("%s", word);
+        word = strtok(NULL, " \n\t");
       }
     }
-    free(pageDir);
     fclose(page);
+    free(line);
+    
   }
+  free(currentFile);
   fclose(indexFile);
   return terms;
 }
