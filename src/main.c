@@ -41,7 +41,6 @@ int main(int argc, char *argv[]) {
   //====================================================//
   termsTree* terms = buildTermsTree(pages, stopwords, mainDir);
   //treeTraversalInOrder(terms, termTreePrintNode, NULL); //for debug
-  //treeTraversalInOrder(treeGetValue(terms), printPage, NULL); // for debug
   // Consult reading=========//
 
   // Consult processing======//
