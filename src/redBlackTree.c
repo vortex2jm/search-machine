@@ -24,32 +24,23 @@ Tree *rotateRight(Tree *node);
 void *treeSearch(Tree *root, char *key, int returnMode);
 void treeFree(Tree *root, DeallocCallback function);
 Tree *treeCreateNode(char *key, void *value, bool color);
-Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function, int compareMode);
+Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function);
 void treeTraversalInOrder(Tree *node, TraversalCallback function, void *argument);
 
 // Implementação=======================//
 //==========================================================================//
-Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function,
-                 int compareMode) {
+Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function){
   // Insert at bottom and color it red.
   if (node == NULL) {
     return treeCreateNode(key, value, RED);
   }
 
-  int cmp;
-  if (compareMode == BY_KEY) {
-    cmp = function(key, node->key);
-  } else if (compareMode == BY_VALUE) {
-    cmp = function(value, node->value);
-  } else {
-    printf("merda na inserção, otário\n");
-    exit(1);
-  }
+  int cmp = function(key, node->key);
 
   if (cmp < 0) {
-    node->left = treeInsert(node->left, key, value, function, compareMode);
+    node->left = treeInsert(node->left, key, value, function);
   } else if (cmp > 0) {
-    node->right = treeInsert(node->right, key, value, function, compareMode);
+    node->right = treeInsert(node->right, key, value, function);
   } else {
     node->value = value;
   }

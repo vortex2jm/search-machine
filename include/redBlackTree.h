@@ -36,7 +36,6 @@ void treeTraversalInOrder(Tree *node, TraversalCallback function,
                           void *argument);
 
 // Insere um novo nó na árvore
-Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function,
-                 int compareMode);
+Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function);
 
 #endif
