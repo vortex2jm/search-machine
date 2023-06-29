@@ -1,7 +1,8 @@
-#include "../include/page.h"
 #include "../include/redBlackTree.h"
 #include "../include/searchMachine.h"
 #include "../include/stopWordsTree.h"
+#include "../include/termsTree.h"
+#include "../include/page.h"
 #include "../include/util.h"
 
 #include <stdio.h>
@@ -39,13 +40,16 @@ int main(int argc, char *argv[]) {
   // TODO: create terms symbol table, must think about implementation
   //====================================================//
   termsTree* terms = buildTermsTree(pages, stopwords, mainDir);
+  //treeTraversalInOrder(terms, termTreePrintNode, NULL); //for debug
+  //treeTraversalInOrder(treeGetValue(terms), printPage, NULL); // for debug
   // Consult reading=========//
 
   // Consult processing======//
 
   // Dealloc ================//
-  treeFree(pages, freePage);
+  treeFree(terms, termTreeFreePagesTree);
   treeFree(stopwords, NULL);
+  treeFree(pages, freePage);
   free(mainDir);
 
   return 0;
