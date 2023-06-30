@@ -8,6 +8,7 @@
 #define PAGES_FILE "index.txt"
 #define GRAPH_FILE "graph.txt"
 #define STOP_WORDS_FILE "stopwords.txt"
+#define PAGES_FOLDER "pages"
 
 // Função auxiliar
 void printOut(void *v, void *argument);

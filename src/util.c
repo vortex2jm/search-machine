@@ -69,7 +69,9 @@ void linkPages(pagesTree *root, char *mainDir) {
       } else {
         // inserindo páginas que saem da página atual
         pageDest = treeSearch(root, token, BY_VALUE); // Página que sai da atual
-        outPages = treeInsert(outPages, token, pageDest, pageComparatorByName); // Árvore de páginas que saem da atual
+        outPages = treeInsert(
+            outPages, token, pageDest,
+            pageComparatorByName); // Árvore de páginas que saem da atual
         setPagesInSize(pageDest); // Somando +1 nas páginas que saem da página q
                                   // e está saindo da atual
         destInPages =
@@ -120,43 +122,49 @@ termsTree *buildTermsTree(pagesTree *pages, stopWordTree *stopwords,
   size_t size = 0;
   termsTree *terms = NULL;
   Page *currentPage = NULL;
-  Tree* currentTerm;
-  Tree* currentPageTree;
+  Tree *currentTerm;
+  Tree *currentPageTree;
 
   // percorre o conjunto de arquivos
-  while (getline(&currentFile, &size, indexFile) != -1){
+  while (getline(&currentFile, &size, indexFile) != -1) {
     currentFile = strtok(currentFile, " \n");
     char pageDir[100] = "";
-    sprintf(pageDir, "./tests/pages/%s", currentFile);
+    sprintf(pageDir, "%s/%s/%s", mainDir, PAGES_FOLDER, currentFile);
     FILE *page = fopen(pageDir, "r");
     char *line = NULL;
     // percorre um arquivo
     while (getline(&line, &size, page) != -1) {
       char *word = strtok(line, " \n\t");
-      while(word){
-        //se não estiver na árvore de stopWords,
-        if(!treeSearch(stopwords, word, BY_KEY)){
-          //o termo deve ser adicionado à arvore de termos
-          //se o termo já estiver lá, deve-se apenas inserir a página em sua árvore de páginas
+      while (word) {
+        // se não estiver na árvore de stopWords,
+        if (!treeSearch(stopwords, word, BY_KEY)) {
+          // o termo deve ser adicionado à arvore de termos
+          // se o termo já estiver lá, deve-se apenas inserir a página em sua
+          // árvore de páginas
           currentTerm = treeSearch(terms, word, BY_VALUE);
-          //se o termo não está na árvore,
-          if(currentTerm == NULL){
-            //ele deve ser adicionado
+          // se o termo não está na árvore,
+          if (currentTerm == NULL) {
+            // ele deve ser adicionado
             terms = treeInsert(terms, word, NULL, termsTreeCompare);
           }
-            currentPageTree = treeSearch(terms, word, BY_VALUE); //obtem a raiz da arvore de paginas
-            currentPage = treeSearch(pages, currentFile, BY_VALUE); //obtem a pagina que deve ser inserida
-            currentPageTree = treeInsert(currentPageTree, currentFile, currentPage, pageComparatorByName);//insere
-            //reinsere a palavra na árvore de termos, com a árvore de páginas atualizada
-            terms = treeInsert(terms, word, currentPageTree, termsTreeCompare);
+          currentPageTree = treeSearch(
+              terms, word, BY_VALUE); // obtem a raiz da arvore de paginas
+          currentPage =
+              treeSearch(pages, currentFile,
+                         BY_VALUE); // obtem a pagina que deve ser inserida
+          currentPageTree =
+              treeInsert(currentPageTree, currentFile, currentPage,
+                         pageComparatorByName); // insere
+          // reinsere a palavra na árvore de termos, com a árvore de páginas
+          // atualizada
+          terms = treeInsert(terms, word, currentPageTree, termsTreeCompare);
         }
-        //printf("%s", word); //for debug
+        // printf("%s", word); //for debug
         word = strtok(NULL, " \n\t");
       }
     }
     fclose(page);
     free(line);
-    
   }
   free(currentFile);
   fclose(indexFile);
