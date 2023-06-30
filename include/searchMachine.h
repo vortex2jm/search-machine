@@ -7,8 +7,8 @@
 // Calcula o page ranking das páginas que estão na árvore de páginas
 void pageRanking(int pageAmount, pagesTree *pageTree);
 
-//recebe termos a serem pesquisados e obtém as páginas relevantes, em ordem
-void searchProcessor(termsTree* terms, stopWordTree* stopWords, char* mainDir);
-
+// recebe termos a serem pesquisados e obtém as páginas relevantes, em ordem
+void searchProcessor(termsTree *terms, stopWordTree *stopWords,
+                     int pagesAmount);
 
 #endif // !SEARCH_MACHINE

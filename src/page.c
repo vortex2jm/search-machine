@@ -1,8 +1,8 @@
+#include "../include/page.h"
+#include "../include/redBlackTree.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/page.h"
-#include "../include/redBlackTree.h"
 
 struct page {
   char *pageName;
@@ -14,7 +14,7 @@ struct page {
   double lastPageRank;
 };
 
-//Protótipos===================//
+// Protótipos===================//
 void freePage(void *p);
 Tree *getPagesIn(Page *p);
 Tree *getPagesOut(Page *p);
@@ -28,7 +28,7 @@ void setPagesOutSize(Page *p, int size);
 void setLastPageRank(Page *p, double pr);
 void printPage(void *page, void *argument);
 int pageComparatorByName(void *k1, void *k2);
-void getSumPageRank(void *page, void *argument); 
+void getSumPageRank(void *page, void *argument);
 void updatePageRank(void *page, void *argument);
 void calculatePageRank(void *page, void *argument);
 int pageComparatorByPageRanking(void *p1, void *p2);
@@ -94,8 +94,8 @@ int pageComparatorByPageRanking(void *p1, void *p2) {
 
 //===========================================//
 int pageComparatorByName(void *k1, void *k2) {
-  char * key1 = k1;
-  char * key2 = k2;
+  char *key1 = k1;
+  char *key2 = k2;
   return strcasecmp(key1, key2);
 }
 
@@ -109,16 +109,19 @@ void printPage(void *page, void *argument) {
 
 //=====================//
 void freePage(void *page) {
-  Page * p = page;
+  Page *p = page;
   if (p) {
-    if(p->pageName){
+    if (p->pageName) {
       free(p->pageName);
     }
     if (p->inPages) {
-      treeFree(p->inPages, NULL); // Os ponteiros dessa árvore serão desalocados na árvore principal (são cópias)
+      treeFree(p->inPages, NULL); // Os ponteiros dessa árvore serão desalocados
+                                  // na árvore principal (são cópias)
     }
     if (p->outPages) {
-      treeFree(p->outPages, NULL); // Os ponteiros dessa árvore serão desalocados na árvore principal (são cópias)
+      treeFree(p->outPages,
+               NULL); // Os ponteiros dessa árvore serão desalocados na árvore
+                      // principal (são cópias)
     }
     free(p);
   }
@@ -166,4 +169,11 @@ void getSumPageRank(void *page, void *argument) {
 void updatePageRank(void *page, void *argument) {
   Page *p = (treeGetValue((Tree *)page));
   setLastPageRank(p, getPageRank(p));
+}
+
+//=========================================//
+void setPageVector(Page **vector, int size) {
+  for (int i = 0; i < size; i++) {
+    vector[i] = NULL;
+  }
 }
