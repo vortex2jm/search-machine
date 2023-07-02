@@ -24,6 +24,8 @@ Tree *getPagesOut(Page *p);
 // Coleta PageRank
 double getPageRank(Page *p);
 
+int getIntersectionCounter(Page * p);
+
 // Troca PagesInSize
 void setPagesInSize(Page *p);
 
@@ -58,6 +60,7 @@ int pageComparatorByName(void *k1, void *k2);
 // Move PageRank para LastPageRank
 void updatePageRank(void *page, void *argument);
 
+
 // Calcula a parte de soma para o calculo de PageRanking
 void getSumPageRank(void *page, void *argument);
 
@@ -67,7 +70,14 @@ void calculatePageRank(void *page, void *argument);
 // Comparador de Páginas por PageRanking
 int pageComparatorByPageRanking(void *p1, void *p2);
 
+// Callback do processador de consultas
+void intersectionProcessor(void * value, void * argument);
+
 // Troca os valores do vetor para NULL
 void setPageVector(Page **vector, int size);
+
+int comparatorPagesVector(const void *p1, const void *p2); 
+
+void printConsult(char * buffer, Page ** pagesVector, int intersectionRange);
 
 #endif

@@ -10,6 +10,7 @@ struct page {
   Tree *inPages;  // Pensar detalhe de implementação
   int outPagesSize;
   int inPagesSize;
+  int intersectionCounter;
   double pageRank;
   double lastPageRank;
 };
@@ -44,6 +45,7 @@ Page *createPage(char *pageName) {
   newPage->outPagesSize = 0;
   newPage->pageRank = 0;
   newPage->lastPageRank = 0;
+  newPage->intersectionCounter = 0;
   return newPage;
 }
 
@@ -67,6 +69,9 @@ Tree *getPagesIn(Page *p) { return p->inPages; }
 
 //=============================================//
 Tree *getPagesOut(Page *p) { return p->outPages; }
+
+//===========================================================//
+int getIntersectionCounter(Page * p){ return p->intersectionCounter; }
 
 //===========================================================//
 void setPagesOut(Page *p, Tree *node) { p->outPages = node; }
@@ -177,3 +182,73 @@ void setPageVector(Page **vector, int size) {
     vector[i] = NULL;
   }
 }
+
+//=========================================//
+int comparatorPagesVector(const void *p1, const void *p2){
+  Page* castP1 = (Page*)p1;
+  Page* castP2 = (Page*)p2;
+
+  if(castP1 == NULL && castP2 == NULL){
+    return 0;
+  }
+  else if(castP1 == NULL){
+    return 1;
+  }
+  else if(castP2 == NULL){
+    return -1;
+  }
+
+  return castP1->pageRank - castP2->pageRank;
+
+}
+
+//========================IMPLEMENTANDO AINDA COM ERRO========================//
+//==================================================//
+void intersectionProcessor(void * value, void * argument){
+  //================ CASTING FUCKFEST ====================//
+  void ** pagesIntersectionArguments =  (void**) argument;
+  Page** pages = (Page**)pagesIntersectionArguments[0];
+  int* index = (int*)pagesIntersectionArguments[1];
+  Page * p = value;
+
+  if(pages[0] == NULL)
+    printf("CORO E COÇA\n"); 
+  printf("index %d\n", *index); 
+
+  //Logica
+  // if(!p->intersectionCounter){
+  //   pages[*index] = p;
+  //   *index++;
+  //   p->intersectionCounter++;
+  //   return;
+  // }
+  // p->intersectionCounter++;
+}
+
+//==================================================//
+void printConsult(char * buffer, Page ** pagesVector, int intersectionRange){
+  printf("search:%s", buffer);
+  printf("pages:");
+  
+  Page * p=NULL;
+  int x=0;
+  while((p = pagesVector[x])){
+    if(getIntersectionCounter(pagesVector[x]) == intersectionRange){
+      printf("%s ", p->pageName);
+    }
+    x++;
+  }
+  printf("\n");
+  printf("pr:");
+
+  x=0;
+  while((p = pagesVector[x])){
+    if(getIntersectionCounter(pagesVector[x]) == intersectionRange){
+      printf("%lf ", p->pageRank);
+      p = NULL;
+    }
+    x++;
+  }
+  printf("\n");
+}
+//==========================================================================//
