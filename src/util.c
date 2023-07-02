@@ -141,7 +141,14 @@ termsTree *buildTermsTree(pagesTree *pages, stopWordTree *stopwords,
           // o termo deve ser adicionado à arvore de termos
           // se o termo já estiver lá, deve-se apenas inserir a página em sua
           // árvore de páginas
+          
+
+          // Henrique Caetano Santos da Silva Pinto
+          //REVISAR ESTE TRECHO=======================//
           currentTerm = treeSearch(terms, word, BY_VALUE);
+          //============================================//
+          
+
           // se o termo não está na árvore,
           if (currentTerm == NULL) {
             // ele deve ser adicionado
@@ -179,3 +186,5 @@ void printOut(void *v, void *argument) {
   printf("PAGINAS QUE ENTRAM DA PAGINA %s\n", getPageName(p));
   treeTraversalInOrder(getPagesIn(p), printPage, NULL);
 }
+
+

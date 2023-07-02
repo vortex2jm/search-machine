@@ -1,7 +1,9 @@
 #include "../include/searchMachine.h"
 #include "../include/page.h"
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Protótipos================================//
 void setPageRankCallback(void *node, void *PR);
@@ -35,18 +37,53 @@ void setPageRankCallback(void *node, void *PR) {
   setLastPageRank(castPage, *PRDouble);
 }
 
-void searchProcessor(termsTree* terms, stopWordTree* stopWords, char* mainDir){
-  //TODO:IMPLEMENTAR
-  //IDEIA DE ALGORITMO ENRICO E TAMELA:
-  /**
-   * PERCORRER ARQUIVO SEARCHES.TXT OBTENDO OS TERMOS A SEREM PESQUISADOS
-   * VERIFICAR SE O TERMO ESTÁ NA ÁRVORE DE STOPWORDS, SE SIM, PARE, SE NÃO, CONTINUE
-   * BUSCAR TERMO NA ARVORE DE TERMOS, INSERIR AS PAGINAS DELE NO VETOR
-   *      --BOOL NA ESTRUTURA DA PAGINA PARA INDICAR SE JÁ FOI USADA (CONSTRUÇÃO DA INTERSEÇÃO)
-   * SE ALGUM TERMO NÃO APARECER EM NENHUMA PÁGINA, NÃO HÁ NECESSIDADE DE CONTINUAR POIS A INTERSEÇÃO É NULA
-   * COM TODOS OS TERMOS PERCORRIDOS, O RESULTADO É UM VETOR DESORDENADO DE PÁGINAS (JÁ É A INTERSEÇÃO)
-   * ORDENAR VETOR PELO PR
-   * PERCORRER VETOR IMPRIMINDO AS PÁGINAS E RETORNANDO O BOOLEANO PARA FALSO PARA USO DA PRÓXIMA PESQUISA
-   * FIM DA PESQUISA
-  */
+//CONSERTAR BUG DE RESET DE BUSCA==========================//
+//=========================================================//
+void searchProcessor(termsTree *terms, stopWordTree *stopWords,
+                     int pagesAmount) {
+  //===================//
+  int termsAmount = 0;  // Quantidade de termos
+  size_t bufferSize = 0;  //auxiliar
+  pagesTree *termPages = NULL;  // Árvore de páginas que contém o termo
+  char *buffer = NULL, *search=NULL, * token = NULL;
+
+  //Vetor de páginas que contém os termos===================================//
+  Page **intersectionPages = calloc(pagesAmount, sizeof(Page *));
+  int intersectionIndex = 0;  // último índice livre do vetor
+
+  //Argumentos da callback==================================================//
+  void ** pagesIntersectionArguments = malloc(sizeof(void*)*2);
+  pagesIntersectionArguments[0] = intersectionPages;  
+  pagesIntersectionArguments[1] = &intersectionIndex;
+
+  //========================================================//
+  while (getline(&buffer, &bufferSize, stdin) != -1) {
+    // Copiando o conteudo do buffer para a variavel search pois o strtok modifica a variável buffer
+    search = strdup(buffer);
+
+    // Separando as strings da consulta
+    token = strtok(buffer, " \n");
+    while(token){
+      if (!treeSearch(stopWords, token, BY_KEY)) {
+        // Garantindo que as palavras da cconsulta estarão na árvore, podemos retirar esta verificação
+        if((termPages = treeSearch(terms, token, BY_VALUE))){
+          // Atravessando a árvore de páginas que contém os termos e adicionando-as no vetor a ser ordenado
+          // caso ainda não esteja lá e incrementando o contador de intersecção
+          treeTraversalInOrder(termPages, intersectionProcessor, pagesIntersectionArguments);
+        }
+      }
+      token = strtok(NULL, " \n");
+      termsAmount++;  //Adicionando o contador de termos
+    }
+    
+    // Ordenando o vetor de páginas
+    qsort(intersectionPages, pagesAmount,sizeof(Page*),comparatorPagesVector);
+    printConsult(search, intersectionPages, pagesAmount, termsAmount);
+    intersectionIndex = 0;
+  }
+
+  free(buffer);
+  free(search);
+  free(intersectionPages);
+  free(pagesIntersectionArguments);
 }

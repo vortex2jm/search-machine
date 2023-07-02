@@ -9,62 +9,73 @@
 
 typedef struct page Page;
 
-//Destrói Página
+// Destrói Página
 void freePage(void *p);
 
-//Coleta PagesIn
+// Coleta PagesIn
 Tree *getPagesIn(Page *p);
 
-//Coleta PageName
+// Coleta PageName
 char *getPageName(Page *p);
 
-//Coleta PagesOut
+// Coleta PagesOut
 Tree *getPagesOut(Page *p);
 
-//Coleta PageRank
+// Coleta PageRank
 double getPageRank(Page *p);
 
-//Troca PagesInSize
+int getIntersectionCounter(Page * p);
+
+// Troca PagesInSize
 void setPagesInSize(Page *p);
 
-//Coleta LastPageRank
+// Coleta LastPageRank
 double getLastPageRank(Page *p);
 
-//Cria uma Página com nome definido
-//ponteiros NULOS e valores zerados
+// Cria uma Página com nome definido
+// ponteiros NULOS e valores zerados
 Page *createPage(char *page_name);
 
-//Troca PageRank
+// Troca PageRank
 void setPageRank(Page *p, double pr);
 
-//Troca PagesIn
+// Troca PagesIn
 void setPagesIn(Page *p, Tree *node);
 
 // => PagesOut
 void setPagesOut(Page *p, Tree *node);
 
-//Troca PagesOutSize
+// Troca PagesOutSize
 void setPagesOutSize(Page *p, int size);
 
-//Troca LastPageRank
+// Troca LastPageRank
 void setLastPageRank(Page *p, double pr);
 
-//Função auxiliar
+// Função auxiliar
 void printPage(void *page, void *argument);
 
-//Comparador de Páginas por Nome
+// Comparador de Páginas por Nome
 int pageComparatorByName(void *k1, void *k2);
 
-//Move PageRank para LastPageRank
+// Move PageRank para LastPageRank
 void updatePageRank(void *page, void *argument);
 
-//Calcula a parte de soma para o calculo de PageRanking
+// Calcula a parte de soma para o calculo de PageRanking
 void getSumPageRank(void *page, void *argument);
 
-//Calcula um ciclo de atualização do PageRanking
+// Calcula um ciclo de atualização do PageRanking
 void calculatePageRank(void *page, void *argument);
 
-//Comparador de Páginas por PageRanking
+// Comparador de Páginas por PageRanking
 int pageComparatorByPageRanking(void *p1, void *p2);
+
+// Callback do processador de consultas
+void intersectionProcessor(void * value, void * argument);
+
+// Comparador de páginas para o quicksort
+int comparatorPagesVector(const void *p1, const void *p2); 
+
+// Gerador de saídas das consultas
+void printConsult(char * buffer, Page ** pagesVector, int pagesVectorSize, int intersectionRange);
 
 #endif
