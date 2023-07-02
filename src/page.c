@@ -106,13 +106,15 @@ int pageComparatorByName(void *k1, void *k2) {
 
 //=========================================//
 void printPage(void *page, void *argument) {
+  if(!page) return;
+  
   Page *pg = treeGetValue((Tree *)page);
   // Page * pg = page;
-  printf("Page name: %s ; Page rank = %.16lf, outPages = %d\n", pg->pageName,
-         pg->pageRank, pg->outPagesSize);
+  printf("Page name: %s ; Page rank = %.16lf; outPages = %d; intersectionCounter = %d\n", pg->pageName,
+         pg->pageRank, pg->outPagesSize, pg->intersectionCounter);
 }
 
-//=====================//
+//=======================//
 void freePage(void *page) {
   Page *p = page;
   if (p) {
@@ -125,8 +127,7 @@ void freePage(void *page) {
     }
     if (p->outPages) {
       treeFree(p->outPages,
-               NULL); // Os ponteiros dessa árvore serão desalocados na árvore
-                      // principal (são cópias)
+               NULL); // Os ponteiros dessa árvore serão desalocados na árvore                      // principal (são cópias)
     }
     free(p);
   }
@@ -138,7 +139,6 @@ void calculatePageRank(void *page, void *argument) {
 
   double pagesAmount = ((double *)argument)[0];
   double difference = ((double *)argument)[1];
-
   double pr = 0.0;
 
   treeTraversalInOrder(p->inPages, getSumPageRank, &pr);
@@ -159,7 +159,6 @@ void calculatePageRank(void *page, void *argument) {
   }
 
   double *vetor = (double *)argument;
-
   vetor[1] = difference;
 }
 
@@ -177,13 +176,6 @@ void updatePageRank(void *page, void *argument) {
 }
 
 //=========================================//
-void setPageVector(Page **vector, int size) {
-  for (int i = 0; i < size; i++) {
-    vector[i] = NULL;
-  }
-}
-
-//=========================================//
 int comparatorPagesVector(const void *p1, const void *p2){
   Page* castP1 = (Page*)p1;
   Page* castP2 = (Page*)p2;
@@ -197,58 +189,56 @@ int comparatorPagesVector(const void *p1, const void *p2){
   else if(castP2 == NULL){
     return -1;
   }
-
   return castP1->pageRank - castP2->pageRank;
-
 }
 
-//========================IMPLEMENTANDO AINDA COM ERRO========================//
 //==================================================//
 void intersectionProcessor(void * value, void * argument){
-  //================ CASTING FUCKFEST ====================//
+  //================ casting do argumento====================//
   void ** pagesIntersectionArguments =  (void**) argument;
   Page** pages = (Page**)pagesIntersectionArguments[0];
   int* index = (int*)pagesIntersectionArguments[1];
-  Page * p = value;
 
-  if(pages[0] == NULL)
-    printf("CORO E COÇA\n"); 
-  printf("index %d\n", *index); 
+  //casting do valor====//
+  Page * p = treeGetValue(value);
 
   //Logica
-  // if(!p->intersectionCounter){
-  //   pages[*index] = p;
-  //   *index++;
-  //   p->intersectionCounter++;
-  //   return;
-  // }
-  // p->intersectionCounter++;
+  if(!p->intersectionCounter){
+    pages[(*index)] = p;
+    (*index)++;
+    p->intersectionCounter++;
+    return;
+  }
+  p->intersectionCounter++;
 }
 
 //==================================================//
-void printConsult(char * buffer, Page ** pagesVector, int intersectionRange){
+void printConsult(char * buffer, Page ** pagesVector, int pagesVectorSize, int intersectionRange){
   printf("search:%s", buffer);
   printf("pages:");
   
   Page * p=NULL;
   int x=0;
-  while((p = pagesVector[x])){
-    if(getIntersectionCounter(pagesVector[x]) == intersectionRange){
+
+  for(int x=0; x<pagesVectorSize; x++){
+    p = pagesVector[x];
+    if(!p) break;
+    if(p->intersectionCounter == intersectionRange){
       printf("%s ", p->pageName);
     }
-    x++;
   }
+
   printf("\n");
   printf("pr:");
 
-  x=0;
-  while((p = pagesVector[x])){
-    if(getIntersectionCounter(pagesVector[x]) == intersectionRange){
+  for(int x=0; x<pagesVectorSize; x++){
+    p = pagesVector[x];
+    if(!p) break;
+    if(p->intersectionCounter == intersectionRange){
       printf("%lf ", p->pageRank);
+      p->intersectionCounter = 0;
       p = NULL;
     }
-    x++;
   }
   printf("\n");
 }
-//==========================================================================//

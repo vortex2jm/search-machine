@@ -60,7 +60,6 @@ int pageComparatorByName(void *k1, void *k2);
 // Move PageRank para LastPageRank
 void updatePageRank(void *page, void *argument);
 
-
 // Calcula a parte de soma para o calculo de PageRanking
 void getSumPageRank(void *page, void *argument);
 
@@ -73,11 +72,10 @@ int pageComparatorByPageRanking(void *p1, void *p2);
 // Callback do processador de consultas
 void intersectionProcessor(void * value, void * argument);
 
-// Troca os valores do vetor para NULL
-void setPageVector(Page **vector, int size);
-
+// Comparador de páginas para o quicksort
 int comparatorPagesVector(const void *p1, const void *p2); 
 
-void printConsult(char * buffer, Page ** pagesVector, int intersectionRange);
+// Gerador de saídas das consultas
+void printConsult(char * buffer, Page ** pagesVector, int pagesVectorSize, int intersectionRange);
 
 #endif
