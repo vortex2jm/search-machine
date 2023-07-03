@@ -225,20 +225,29 @@ void printConsult(char * buffer, Page ** pagesVector, int pagesVectorSize, int i
   Page * p = NULL;
   int x=0;
 
+  int pagesCounter = 0;
   for(x=0; x<pagesVectorSize; x++){
     p = pagesVector[x];
     if(p->intersectionCounter == intersectionRange){
-      printf("%s ", p->pageName);
+      if(pagesCounter != 0)
+        printf(" ");
+      printf("%s", p->pageName);
+      pagesCounter++;
     }
   }
 
   printf("\n");
   printf("pr:");
 
+  int pageRankCounter =0;
   for(x=0; x<pagesVectorSize; x++){
     p = pagesVector[x];
     if(p->intersectionCounter == intersectionRange){
-      printf("%lf ", p->pageRank);
+      if(pageRankCounter != 0){
+        printf(" ");
+      }
+      printf("%lf", p->pageRank);
+      pageRankCounter ++;
     }
     p->intersectionCounter = 0;
     pagesVector[x] = NULL;
