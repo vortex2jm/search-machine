@@ -77,9 +77,10 @@ void searchProcessor(termsTree *terms, stopWordTree *stopWords,
     }
     
     // Ordenando o vetor de páginas
-    qsort(intersectionPages, pagesAmount,sizeof(Page*),comparatorPagesVector);
+    qsort(intersectionPages, pagesAmount, sizeof(Page*), comparatorPagesVector);
     printConsult(search, intersectionPages, pagesAmount, termsAmount);
     intersectionIndex = 0;
+    termsAmount = 0;
   }
 
   free(buffer);
