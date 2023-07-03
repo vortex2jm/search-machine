@@ -177,8 +177,12 @@ void updatePageRank(void *page, void *argument) {
 
 //=========================================//
 int comparatorPagesVector(const void *p1, const void *p2){
-  Page* castP1 = (Page*)p1;
-  Page* castP2 = (Page*)p2;
+  const Page* castP1 = (const Page*) p1;
+  const Page* castP2 = (const Page*) p2;
+
+  //TODO: VALORES DE PR SÃO ZERO, RESOLVER URGENTE
+  //printf("%lf\n", castP1->pageRank);
+  //printf("%lf\n", castP2->pageRank);
 
   if(castP1 == NULL && castP2 == NULL){
     return 0;
@@ -189,7 +193,10 @@ int comparatorPagesVector(const void *p1, const void *p2){
   else if(castP2 == NULL){
     return -1;
   }
-  return castP1->pageRank - castP2->pageRank;
+
+  if(castP1->pageRank > castP2->pageRank) return -1;
+  else if(castP1->pageRank < castP2->pageRank) return 1;
+  else return 0;
 }
 
 //==================================================//
@@ -217,10 +224,10 @@ void printConsult(char * buffer, Page ** pagesVector, int pagesVectorSize, int i
   printf("search:%s", buffer);
   printf("pages:");
   
-  Page * p=NULL;
+  Page * p = NULL;
   int x=0;
 
-  for(int x=0; x<pagesVectorSize; x++){
+  for(x=0; x<pagesVectorSize; x++){
     p = pagesVector[x];
     if(!p) break;
     if(p->intersectionCounter == intersectionRange){
@@ -231,14 +238,14 @@ void printConsult(char * buffer, Page ** pagesVector, int pagesVectorSize, int i
   printf("\n");
   printf("pr:");
 
-  for(int x=0; x<pagesVectorSize; x++){
+  for(x=0; x<pagesVectorSize; x++){
     p = pagesVector[x];
     if(!p) break;
     if(p->intersectionCounter == intersectionRange){
       printf("%lf ", p->pageRank);
-      p->intersectionCounter = 0;
-      p = NULL;
     }
+    p->intersectionCounter = 0;
+    pagesVector[x] = NULL;
   }
   printf("\n");
 }
