@@ -48,13 +48,15 @@ void searchProcessor(termsTree *terms, stopWordTree *stopWords,
   char *buffer = NULL, *search=NULL, * token = NULL;
 
   //Vetor de páginas que contém os termos===================================//
+  // Este vetor foi alocado com a quantidade de páginas que tem na árvore
+  // de páginas, mas não necessariamente todas elas estarão lá dentro
   Page **intersectionPages = calloc(pagesAmount, sizeof(Page *));
-  int intersectionIndex = 0;  // último índice livre do vetor
+  int intersectionIndex = 0;  // próximo índice livre do vetor
 
   //Argumentos da callback==================================================//
   void ** pagesIntersectionArguments = malloc(sizeof(void*)*2);
-  pagesIntersectionArguments[0] = intersectionPages;  
-  pagesIntersectionArguments[1] = &intersectionIndex;
+  pagesIntersectionArguments[0] = intersectionPages;  //vetor
+  pagesIntersectionArguments[1] = &intersectionIndex; //próximo índice livre
 
   //========================================================//
   while (getline(&buffer, &bufferSize, stdin) != -1) {
@@ -77,8 +79,8 @@ void searchProcessor(termsTree *terms, stopWordTree *stopWords,
     }
     
     // Ordenando o vetor de páginas
-    qsort(intersectionPages, pagesAmount, sizeof(Page*), comparatorPagesVector);
-    printConsult(search, intersectionPages, pagesAmount, termsAmount);
+    qsort(intersectionPages, intersectionIndex, sizeof(Page*), comparatorPagesVector);
+    printConsult(search, intersectionPages, intersectionIndex, termsAmount);
     intersectionIndex = 0;
     termsAmount = 0;
   }
