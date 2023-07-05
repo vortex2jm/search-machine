@@ -1,5 +1,5 @@
 #include "../include/page.h"
-#include "../include/redBlackTree.h"
+#include "../include/ternarySearchTries.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,6 +10,7 @@ struct page {
   Tree *inPages;  // Pensar detalhe de implementação
   int outPagesSize;
   int inPagesSize;
+  int intersectionCounter;
   double pageRank;
   double lastPageRank;
 };
@@ -44,6 +45,7 @@ Page *createPage(char *pageName) {
   newPage->outPagesSize = 0;
   newPage->pageRank = 0;
   newPage->lastPageRank = 0;
+  newPage->intersectionCounter = 0;
   return newPage;
 }
 
@@ -67,6 +69,9 @@ Tree *getPagesIn(Page *p) { return p->inPages; }
 
 //=============================================//
 Tree *getPagesOut(Page *p) { return p->outPages; }
+
+//===========================================================//
+int getIntersectionCounter(Page * p){ return p->intersectionCounter; }
 
 //===========================================================//
 void setPagesOut(Page *p, Tree *node) { p->outPages = node; }
@@ -101,13 +106,15 @@ int pageComparatorByName(void *k1, void *k2) {
 
 //=========================================//
 void printPage(void *page, void *argument) {
+  if(!page) return;
+  
   Page *pg = treeGetValue((Tree *)page);
   // Page * pg = page;
-  printf("Page name: %s ; Page rank = %.16lf, outPages = %d\n", pg->pageName,
-         pg->pageRank, pg->outPagesSize);
+  printf("Page name: %s ; Page rank = %.16lf; outPages = %d; intersectionCounter = %d\n", pg->pageName,
+         pg->pageRank, pg->outPagesSize, pg->intersectionCounter);
 }
 
-//=====================//
+//=======================//
 void freePage(void *page) {
   Page *p = page;
   if (p) {
@@ -120,8 +127,7 @@ void freePage(void *page) {
     }
     if (p->outPages) {
       treeFree(p->outPages,
-               NULL); // Os ponteiros dessa árvore serão desalocados na árvore
-                      // principal (são cópias)
+               NULL); // Os ponteiros dessa árvore serão desalocados na árvore                      // principal (são cópias)
     }
     free(p);
   }
@@ -133,7 +139,6 @@ void calculatePageRank(void *page, void *argument) {
 
   double pagesAmount = ((double *)argument)[0];
   double difference = ((double *)argument)[1];
-
   double pr = 0.0;
 
   treeTraversalInOrder(p->inPages, getSumPageRank, &pr);
@@ -154,7 +159,6 @@ void calculatePageRank(void *page, void *argument) {
   }
 
   double *vetor = (double *)argument;
-
   vetor[1] = difference;
 }
 
@@ -172,8 +176,81 @@ void updatePageRank(void *page, void *argument) {
 }
 
 //=========================================//
-void setPageVector(Page **vector, int size) {
-  for (int i = 0; i < size; i++) {
-    vector[i] = NULL;
+int comparatorPagesVector(const void *p1, const void *p2){
+  Page* (*castP1) = (Page**) p1;
+  Page* (*castP2) = (Page**) p2;
+  
+  if((*castP1) == NULL && (*castP2) == NULL){
+    return 0;
   }
+  else if((*castP1) == NULL){
+    return 1;
+  }
+  else if((*castP2) == NULL){
+    return -1;
+  }
+
+  if((*castP1)->pageRank > (*castP2)->pageRank) return -1;
+  else if((*castP1)->pageRank < (*castP2)->pageRank) return 1;
+  else return 0;
+}
+
+//==================================================//
+void intersectionProcessor(void * value, void * argument){
+  //================ casting do argumento====================//
+  void ** pagesIntersectionArguments =  (void**) argument;
+  Page** pages = (Page**)pagesIntersectionArguments[0];
+  int* index = (int*)pagesIntersectionArguments[1];
+
+  //casting do valor====//
+  Page * p = treeGetValue(value);
+
+  //Logica
+  if(!p->intersectionCounter){
+    pages[(*index)] = p;
+    (*index)++;
+    p->intersectionCounter++;
+    return;
+  }
+  p->intersectionCounter++;
+}
+
+//==================================================//
+void printConsult(char * buffer, Page ** pagesVector, int pagesVectorSize, int intersectionRange){
+  // intersectionRange é a quantidade de termos que a página em questão possui
+  // Só serão impressor os que tiverem a máxima quantidade de termos, que é a intersecção das páginas
+  printf("search:%s", buffer);
+  printf("pages:");
+  
+  Page * p = NULL;
+  int x=0;
+
+  int pagesCounter = 0;
+  for(x=0; x<pagesVectorSize; x++){
+    p = pagesVector[x];
+    if(p->intersectionCounter == intersectionRange){
+      if(pagesCounter != 0)
+        printf(" ");
+      printf("%s", p->pageName);
+      pagesCounter++;
+    }
+  }
+
+  printf("\n");
+  printf("pr:");
+
+  int pageRankCounter =0;
+  for(x=0; x<pagesVectorSize; x++){
+    p = pagesVector[x];
+    if(p->intersectionCounter == intersectionRange){
+      if(pageRankCounter != 0){
+        printf(" ");
+      }
+      printf("%lf", p->pageRank);
+      pageRankCounter ++;
+    }
+    p->intersectionCounter = 0;
+    pagesVector[x] = NULL;
+  }
+  printf("\n");
 }

@@ -1,6 +1,6 @@
 #ifndef SEARCH_MACHINE
 #define SEARCH_MACHINE
-#include "redBlackTree.h"
+#include "ternarySearchTries.h"
 
 #define PGR_LIMIT 0.000001
 

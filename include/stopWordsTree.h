@@ -1,7 +1,7 @@
 #ifndef STOPWORDSTREE_H
 #define STOPWORDSTREE_H
 
-#include "../include/redBlackTree.h"
+#include "../include/ternarySearchTries.h"
 
 typedef Tree stopWordTree;
 

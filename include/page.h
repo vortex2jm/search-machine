@@ -1,7 +1,7 @@
 #ifndef PAGE_H
 #define PAGE_H
 
-#include "redBlackTree.h"
+#include "ternarySearchTries.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -23,6 +23,8 @@ Tree *getPagesOut(Page *p);
 
 // Coleta PageRank
 double getPageRank(Page *p);
+
+int getIntersectionCounter(Page * p);
 
 // Troca PagesInSize
 void setPagesInSize(Page *p);
@@ -67,7 +69,13 @@ void calculatePageRank(void *page, void *argument);
 // Comparador de Páginas por PageRanking
 int pageComparatorByPageRanking(void *p1, void *p2);
 
-// Troca os valores do vetor para NULL
-void setPageVector(Page **vector, int size);
+// Callback do processador de consultas
+void intersectionProcessor(void * value, void * argument);
+
+// Comparador de páginas para o quicksort
+int comparatorPagesVector(const void *p1, const void *p2); 
+
+// Gerador de saídas das consultas
+void printConsult(char * buffer, Page ** pagesVector, int pagesVectorSize, int intersectionRange);
 
 #endif

@@ -2,7 +2,7 @@
 #define TERMSTREE_H
 
 #include "../include/page.h"
-#include "../include/redBlackTree.h"
+#include "../include/ternarySearchTries.h"
 
 typedef Tree termsTree; 
 

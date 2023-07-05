@@ -6,8 +6,8 @@ int termsTreeCompare(void* c1, void* c2){
 }
 
 void termTreePrintNode(void* value, void* arg){
-    printf("WORD:%s\n", treeGetKey((Tree*) value));
-    treeTraversalInOrder(treeGetValue(value), printPage, NULL);
+    //printf("WORD:%s\n", treeGetKey((Tree*) value));
+    //treeTraversalInOrder(treeGetValue(value), printPage, NULL);
 }
 
 void termTreeFreePagesTree(void* value){

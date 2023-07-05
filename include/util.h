@@ -1,7 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 #include "page.h"
-#include "redBlackTree.h"
+#include "ternarySearchTries.h"
 // #include "stopWordsTree.h"
 // #include "termsTree.h"
 

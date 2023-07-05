@@ -4,9 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define BY_KEY 1
-#define BY_VALUE 0
-
 typedef struct node Tree;
 typedef Tree stopWordTree;
 typedef Tree termsTree;
@@ -25,17 +22,16 @@ void *treeGetValue(Tree *node);
 
 // Procura um nó na árvore através de uma chave
 // retorna o valor ou a chave, dependendo do parametro returnMode
-void *treeSearch(Tree *root, char *key, int returnMode);
+void *treeSearch(Tree *root, char *key);
 
 // Libera memória alocada para uma árvore. Usa uma função de callback para
-// desalocar o valor Caso a função seja nula, desaloca só os nós da árvore
+// desalocar o valor. Caso a função seja nula, desaloca só os nós da árvore
 void treeFree(Tree *root, DeallocCallback function);
 
 // Atravessa a árvore de forma crescente
-void treeTraversalInOrder(Tree *node, TraversalCallback function,
-                          void *argument);
+void treeTraversalInOrder(Tree *node, TraversalCallback function, void *argument);
 
 // Insere um novo nó na árvore
-Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function);
+Tree *treeInsert(Tree *node, char *key, void *value);
 
 #endif

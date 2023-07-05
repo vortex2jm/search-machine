@@ -8,6 +8,6 @@ int stopWordsCompare(void* c1, void* c2){
 }
 
 void printStopWord(void* node, void* arg){
-    char* word = (char*) treeGetKey((stopWordTree*) node);
-    printf("%s\n", word);
+    //char* word = (char*) treeGetKey((stopWordTree*) node);
+    //printf("%s\n", word);
 }

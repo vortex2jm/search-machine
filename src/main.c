@@ -1,5 +1,5 @@
 #include "../include/page.h"
-#include "../include/redBlackTree.h"
+#include "../include/ternarySearchTries.h"
 #include "../include/searchMachine.h"
 #include "../include/stopWordsTree.h"
 #include "../include/termsTree.h"
@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
   int pagesAmount = 0;
   char *mainDir = strdup(argv[1]);
 
+  
   // Construindo árvore de páginas
   pagesTree *pages = buildPagesTree(mainDir, &pagesAmount);
   // treeTraversalInOrder(pages, printPage, NULL); // For debug
