@@ -257,10 +257,10 @@ void searchProcessor(TermsTree *terms, StopWordTree *stopWords, int pagesAmount)
     printConsult(search, intersectionPages, intersectionIndex, termsAmount);
     intersectionIndex = 0;
     termsAmount = 0;
+    free(search);
   }
 
   free(buffer);
-  free(search);
   free(intersectionPages);
   free(pagesIntersectionArguments);
 }
