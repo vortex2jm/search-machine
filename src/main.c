@@ -1,9 +1,6 @@
 #include "../include/page.h"
 #include "../include/redBlackTree.h"
 #include "../include/searchMachine.h"
-#include "../include/stopWordsTree.h"
-#include "../include/termsTree.h"
-#include "../include/util.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,31 +18,26 @@ int main(int argc, char *argv[]) {
   char *mainDir = strdup(argv[1]);
 
   // Construindo árvore de páginas
-  pagesTree *pages = buildPagesTree(mainDir, &pagesAmount);
-  // treeTraversalInOrder(pages, printPage, NULL); // For debug
+  PagesTree *pages = buildPagesTree(mainDir, &pagesAmount);
 
   // Inserindo links entre páginas
   linkPages(pages, mainDir);
-  // treeTraversalInOrder(pages, printOut, NULL); // For debug
 
   // Calculando page ranking
   pageRanking(pagesAmount, pages);
-  // treeTraversalInOrder(pages, printPage, NULL);
 
   // Construindo árvore de stop words
-  stopWordTree *stopwords = buildStopWordsTree(mainDir);
-  // treeTraversalInOrder(stopwords, printStopWord, NULL); // For debug
+  StopWordTree *stopWords = buildStopWordsTree(mainDir);
 
   // Construindo árvore de termos
-  termsTree *terms = buildTermsTree(pages, stopwords, mainDir);
-  // treeTraversalInOrder(terms, termTreePrintNode, NULL); //for debug
+  TermsTree *terms = buildTermsTree(pages, stopWords, mainDir);
 
   // Consult processing======//
-  searchProcessor(terms, stopwords, pagesAmount);
+  searchProcessor(terms, stopWords, pagesAmount);
 
   // Dealloc ================//
   treeFree(terms, termTreeFreePagesTree);
-  treeFree(stopwords, NULL);
+  treeFree(stopWords, NULL);
   treeFree(pages, freePage);
   free(mainDir);
 

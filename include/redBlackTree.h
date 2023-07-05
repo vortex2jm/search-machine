@@ -4,13 +4,10 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define BY_KEY 1
-#define BY_VALUE 0
-
 typedef struct node Tree;
-typedef Tree stopWordTree;
-typedef Tree termsTree;
-typedef Tree pagesTree;
+typedef Tree StopWordTree;
+typedef Tree TermsTree;
+typedef Tree PagesTree;
 
 // funções que devem ser definidas pelo cliente
 typedef void (*DeallocCallback)(void *value);
@@ -32,8 +29,7 @@ void *treeSearch(Tree *root, char *key);
 void treeFree(Tree *root, DeallocCallback function);
 
 // Atravessa a árvore de forma crescente
-void treeTraversalInOrder(Tree *node, TraversalCallback function,
-                          void *argument);
+void treeTraversalInOrder(Tree *node, TraversalCallback function, void *argument);
 
 // Insere um novo nó na árvore
 Tree *treeInsert(Tree *node, char *key, void *value, CompareCallback function);
