@@ -19,7 +19,7 @@ struct node {
 typedef struct string String;
 
 struct string{
-    char* c;
+    unsigned char* c;
     int len;
 };
 
@@ -50,7 +50,7 @@ static Tree* rec_insert(Tree* node, String* key, void* value, int d){
 
 Tree *treeInsert(Tree* node, char* key, void* value){
     String nKey;
-    nKey.c = strdup(key);
+    nKey.c = key;
     nKey.len = strlen(key);
     return rec_insert(node, &nKey, value, 0);
 }
