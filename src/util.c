@@ -60,7 +60,7 @@ void linkPages(pagesTree *root, char *mainDir) {
       if (!tokCounter) {
         // Pegando o nó da árvore que contém a página com o primeiro nome da
         // linha
-        currentPage = treeSearch(root, token, BY_VALUE);
+        currentPage = treeSearch(root, token);
         // currentPage = treeGetValue(currentNode);
         outPages = getPagesOut(currentPage);
       } else if (tokCounter == 1) {
@@ -68,7 +68,7 @@ void linkPages(pagesTree *root, char *mainDir) {
         setPagesOutSize(currentPage, atoi(token));
       } else {
         // inserindo páginas que saem da página atual
-        pageDest = treeSearch(root, token, BY_VALUE); // Página que sai da atual
+        pageDest = treeSearch(root, token); // Página que sai da atual
         outPages = treeInsert(
             outPages, token, pageDest,
             pageComparatorByName); // Árvore de páginas que saem da atual
@@ -98,13 +98,14 @@ stopWordTree *buildStopWordsTree(char *mainDir) {
   sprintf(fileName, "%s/%s", mainDir, STOP_WORDS_FILE);
   FILE *stopWordsFile = fopen(fileName, "r");
   char *currentWord = NULL;
-  size_t size = 0;
   stopWordTree *root = NULL;
+  size_t size = 0;
+  bool wordIsthere = true;
 
   while (getline(&currentWord, &size, stopWordsFile) != -1) {
     currentWord = strtok(currentWord, " \n");
     // printf("%s\n", currentWord); //for debug
-    root = treeInsert(root, currentWord, currentWord, stopWordsCompare);
+    root = treeInsert(root, currentWord, &wordIsthere, stopWordsCompare);
   }
   free(currentWord);
   fclose(stopWordsFile);
@@ -137,7 +138,7 @@ termsTree *buildTermsTree(pagesTree *pages, stopWordTree *stopwords,
       char *word = strtok(line, " \n\t");
       while (word) {
         // se não estiver na árvore de stopWords,
-        if (!treeSearch(stopwords, word, BY_KEY)) {
+        if (!treeSearch(stopwords, word)) {
           // o termo deve ser adicionado à arvore de termos
           // se o termo já estiver lá, deve-se apenas inserir a página em sua
           // árvore de páginas
@@ -145,7 +146,7 @@ termsTree *buildTermsTree(pagesTree *pages, stopWordTree *stopwords,
 
           // Henrique Caetano Santos da Silva Pinto
           //REVISAR ESTE TRECHO=======================//
-          currentTerm = treeSearch(terms, word, BY_VALUE);
+          currentTerm = treeSearch(terms, word);
           //============================================//
           
 
@@ -155,10 +156,9 @@ termsTree *buildTermsTree(pagesTree *pages, stopWordTree *stopwords,
             terms = treeInsert(terms, word, NULL, termsTreeCompare);
           }
           currentPageTree = treeSearch(
-              terms, word, BY_VALUE); // obtem a raiz da arvore de paginas
+              terms, word); // obtem a raiz da arvore de paginas
           currentPage =
-              treeSearch(pages, currentFile,
-                         BY_VALUE); // obtem a pagina que deve ser inserida
+              treeSearch(pages, currentFile); // obtem a pagina que deve ser inserida
           currentPageTree =
               treeInsert(currentPageTree, currentFile, currentPage,
                          pageComparatorByName); // insere

@@ -66,9 +66,9 @@ void searchProcessor(termsTree *terms, stopWordTree *stopWords,
     // Separando as strings da consulta
     token = strtok(buffer, " \n");
     while(token){
-      if (!treeSearch(stopWords, token, BY_KEY)) {
+      if (!treeSearch(stopWords, token)) {
         // Garantindo que as palavras da cconsulta estarão na árvore, podemos retirar esta verificação
-        if((termPages = treeSearch(terms, token, BY_VALUE))){
+        if((termPages = treeSearch(terms, token))){
           // Atravessando a árvore de páginas que contém os termos e adicionando-as no vetor a ser ordenado
           // caso ainda não esteja lá e incrementando o contador de intersecção
           treeTraversalInOrder(termPages, intersectionProcessor, pagesIntersectionArguments);

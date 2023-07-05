@@ -25,7 +25,7 @@ void *treeGetValue(Tree *node);
 
 // Procura um nó na árvore através de uma chave
 // retorna o valor ou a chave, dependendo do parametro returnMode
-void *treeSearch(Tree *root, char *key, int returnMode);
+void *treeSearch(Tree *root, char *key);
 
 // Libera memória alocada para uma árvore. Usa uma função de callback para
 // desalocar o valor Caso a função seja nula, desaloca só os nós da árvore
