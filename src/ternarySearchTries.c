@@ -15,16 +15,23 @@ struct node {
     void* value;
     Tree *left, *middle, *right;
 };
-
-typedef struct string String;
-
 struct string{
     unsigned char* c;
     int len;
 };
+typedef struct string String;
+
+//Protótipos==========================//
+Tree* create_node();
+void *treeGetValue(Tree *node);
+void* treeSearch(Tree* node, char* key);
+Tree* rec_search(Tree* node, String* key, int d);
+void treeFree(Tree *root, DeallocCallback function);
+Tree *treeInsert(Tree* node, char* key, void* value);
+static Tree* rec_insert(Tree* node, String* key, void* value, int d);
+void treeTraversalInOrder(Tree *node, TraversalCallback function, void *argument);
 
 // Implementação=======================//
-//==========================================================================//
 Tree* create_node(){
     Tree* node = malloc(sizeof(Tree));
     node->key = '\0';
@@ -35,6 +42,7 @@ Tree* create_node(){
     return node;
 }
 
+//=================================================================//
 static Tree* rec_insert(Tree* node, String* key, void* value, int d){
     unsigned char c = tolower(key->c[d]);
     //comparação deve ser revisada
@@ -48,6 +56,7 @@ static Tree* rec_insert(Tree* node, String* key, void* value, int d){
     return node;
 }
 
+//=================================================//
 Tree *treeInsert(Tree* node, char* key, void* value){
     String nKey;
     nKey.c = key;
@@ -55,6 +64,7 @@ Tree *treeInsert(Tree* node, char* key, void* value){
     return rec_insert(node, &nKey, value, 0);
 }
 
+//==============================================//
 Tree* rec_search(Tree* node, String* key, int d) {
     if (node == NULL) { return NULL; }
 
@@ -67,6 +77,7 @@ Tree* rec_search(Tree* node, String* key, int d) {
     } else { return node; }
 }
 
+//=====================================//
 void* treeSearch(Tree* node, char* key) {
     String nKey;
     nKey.c = key; nKey.len = strlen(key);
@@ -75,7 +86,7 @@ void* treeSearch(Tree* node, char* key) {
     else { return node->value; }
 }
 
-
+//================================================//
 void treeFree(Tree *root, DeallocCallback function){
     if(root){
         treeFree(root->left,function);
@@ -88,7 +99,7 @@ void treeFree(Tree *root, DeallocCallback function){
     }
 }
 
-
+//==============================================================================//
 void treeTraversalInOrder(Tree *node, TraversalCallback function, void *argument){
     if(!node){return;}
     treeTraversalInOrder(node->left,function,argument);
@@ -99,7 +110,7 @@ void treeTraversalInOrder(Tree *node, TraversalCallback function, void *argument
     treeTraversalInOrder(node->right,function,argument);
 }
 
-
+//===========================//
 void *treeGetValue(Tree *node){
     return node->value;
 }

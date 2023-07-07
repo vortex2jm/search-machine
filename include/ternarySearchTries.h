@@ -5,9 +5,9 @@
 #include <string.h>
 
 typedef struct node Tree;
-typedef Tree stopWordTree;
-typedef Tree termsTree;
-typedef Tree pagesTree;
+typedef Tree StopWordTree;
+typedef Tree TermsTree;
+typedef Tree PagesTree;
 
 // funções que devem ser definidas pelo cliente
 typedef void (*DeallocCallback)(void *value);
@@ -15,7 +15,7 @@ typedef int (*CompareCallback)(void *v1, void *v2);
 typedef void (*TraversalCallback)(void *value, void *argument);
 
 // Retorna a chave de uma árvore
-char *treeGetKey(Tree *node);
+// char *treeGetKey(Tree *node);
 
 // Retorna o valor de um nó da árvore
 void *treeGetValue(Tree *node);

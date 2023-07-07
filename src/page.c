@@ -5,14 +5,14 @@
 #include <string.h>
 
 struct page {
+  Tree *inPages;  // Pensar detalhe de implementação
   char *pageName;
   Tree *outPages; // Esta estrutura também pode ser uma RBT
-  Tree *inPages;  // Pensar detalhe de implementação
-  int outPagesSize;
   int inPagesSize;
-  int intersectionCounter;
   double pageRank;
+  int outPagesSize;
   double lastPageRank;
+  int intersectionCounter;
 };
 
 // Protótipos===================//
@@ -175,7 +175,7 @@ void updatePageRank(void *page, void *argument) {
   setLastPageRank(p, getPageRank(p));
 }
 
-//=========================================//
+//=======================================================//
 int comparatorPagesVector(const void *p1, const void *p2){
   Page* (*castP1) = (Page**) p1;
   Page* (*castP2) = (Page**) p2;
@@ -197,7 +197,7 @@ int comparatorPagesVector(const void *p1, const void *p2){
 
 //==================================================//
 void intersectionProcessor(void * value, void * argument){
-  //================ casting do argumento====================//
+  //===casting do argumento===/
   void ** pagesIntersectionArguments =  (void**) argument;
   Page** pages = (Page**)pagesIntersectionArguments[0];
   int* index = (int*)pagesIntersectionArguments[1];

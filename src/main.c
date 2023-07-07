@@ -1,9 +1,6 @@
 #include "../include/page.h"
 #include "../include/ternarySearchTries.h"
 #include "../include/searchMachine.h"
-#include "../include/stopWordsTree.h"
-#include "../include/termsTree.h"
-#include "../include/util.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,31 +12,24 @@ int main(int argc, char *argv[]) {
     printf("You must insert main directory name!\n");
     return 1;
   }
-
   // Variables=================//
   int pagesAmount = 0;
   char *mainDir = strdup(argv[1]);
 
-  
   // Construindo árvore de páginas
-  pagesTree *pages = buildPagesTree(mainDir, &pagesAmount);
-  // treeTraversalInOrder(pages, printPage, NULL); // For debug
+  PagesTree *pages = buildPagesTree(mainDir, &pagesAmount);
 
   // Inserindo links entre páginas
   linkPages(pages, mainDir);
-  // treeTraversalInOrder(pages, printOut, NULL); // For debug
 
   // Calculando page ranking
   pageRanking(pagesAmount, pages);
-  // treeTraversalInOrder(pages, printPage, NULL);
 
   // Construindo árvore de stop words
-  stopWordTree *stopwords = buildStopWordsTree(mainDir);
-  // treeTraversalInOrder(stopwords, printStopWord, NULL); // For debug
+  StopWordTree *stopwords = buildStopWordsTree(mainDir);
 
   // Construindo árvore de termos
-  termsTree *terms = buildTermsTree(pages, stopwords, mainDir);
-  // treeTraversalInOrder(terms, termTreePrintNode, NULL); //for debug
+  TermsTree *terms = buildTermsTree(pages, stopwords, mainDir);
 
   // Consult processing======//
   searchProcessor(terms, stopwords, pagesAmount);

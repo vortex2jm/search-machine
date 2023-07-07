@@ -24,7 +24,6 @@ Tree *getPagesOut(Page *p);
 // Coleta PageRank
 double getPageRank(Page *p);
 
-int getIntersectionCounter(Page * p);
 
 // Troca PagesInSize
 void setPagesInSize(Page *p);
@@ -38,6 +37,9 @@ Page *createPage(char *page_name);
 
 // Troca PageRank
 void setPageRank(Page *p, double pr);
+
+// Retorna quantos termos página tem em uma busca
+int getIntersectionCounter(Page * p);
 
 // Troca PagesIn
 void setPagesIn(Page *p, Tree *node);
