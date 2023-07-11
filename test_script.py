@@ -1,5 +1,18 @@
 import os
 import sys 
+import filecmp
+import subprocess
+import time
+
+OUT_FILE='out.txt'
+
+def execute_program(program, main_dir):
+    process = subprocess.Popen(['make'])
+    process.wait()
+
+    print('Executing...')
+    process2 = subprocess.Popen(f'./{program} {main_dir} < {main_dir}/searches.txt > {OUT_FILE}', shell=True)
+    process2.wait()
 
 #=================================#
 def remove_decimal_precision(value):
@@ -47,7 +60,17 @@ def create_temporary_files(f1, f2):
 
 #========================#
 def compare_files(f1, f2):
-    os.system(f'diff {f1} {f2}')
+    print('Testing...')
+    time.sleep(1)
+    result = filecmp.cmp(f1, f2)
+    if result:
+        print('No differences found!')
+        return
+    buffer = str(input('Differences found! Do you wanna see more details? [yes/any]'))
+    if buffer == 'yes':
+        os.system(f'diff {f1} {f2}')
+        return
+    return
 
 #================#
 def remove_file(f):
@@ -55,15 +78,15 @@ def remove_file(f):
 
 #=========#
 def main():
-    if len(sys.argv) != 3:
-        print('Insert args!')
+    if len(sys.argv) != 4:
+        print('Insert args! [program name][main directory][test file]')
         exit(1)
 
-    temp1, temp2 = create_temporary_files(sys.argv[1], sys.argv[2])
+    execute_program(sys.argv[1], sys.argv[2])
+    temp1, temp2 = create_temporary_files(sys.argv[3], OUT_FILE)
     compare_files(temp1, temp2)
     remove_file(temp1)
     remove_file(temp2)
-    print('All done!')
 
 if __name__ == '__main__':
     main()
