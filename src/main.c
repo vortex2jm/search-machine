@@ -7,12 +7,13 @@
 #include <string.h>
 
 int main(int argc, char *argv[]) {
-  // Validation =============//
+  // validação //
   if (argc < 2) {
     printf("You must insert main directory name!\n");
     return 1;
   }
-  // Variables=================//
+  
+  // variaveis //
   int pagesAmount = 0;
   char *mainDir = strdup(argv[1]);
 
@@ -31,7 +32,7 @@ int main(int argc, char *argv[]) {
   // Construindo árvore de termos
   TermsTree *terms = buildTermsTree(pages, stopwords, mainDir);
 
-  // Consult processing======//
+  // processamento de consultas //
   searchProcessor(terms, stopwords, pagesAmount);
 
   // Dealloc ================//

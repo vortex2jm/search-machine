@@ -9,75 +9,148 @@
 
 typedef struct page Page;
 
-// Destrói Página
+/// @brief libera a memória da página, dentro de uma callback TST
+/// @param p deve ser um Page*
 void freePage(void *p);
 
-// Coleta PagesIn
+
+/// @brief obtém PagesIn de uma página
+/// @param p página de interesse
+/// @return árvore de páginas IN
 Tree *getPagesIn(Page *p);
 
-// Coleta PageName
+
+/// @brief obtém o nome da página 
+/// @param p página de interesse
+/// @return nome da página
 char *getPageName(Page *p);
 
 // Coleta PagesOut
+
+/// @brief obtém PagesOut de uma página
+/// @param p página de interesse
+/// @return árvore de páginas OUT
 Tree *getPagesOut(Page *p);
 
-// Coleta PageRank
+
+/// @brief obtém PageRank de uma página
+/// @param p página de interesse
+/// @return PageRank
 double getPageRank(Page *p);
 
 
-// Troca PagesInSize
+
+/// @brief incrementa numero da paginas IN de uma página
+/// @param p página de interesse
 void setPagesInSize(Page *p);
 
-// Coleta LastPageRank
+
+/// @brief obtém PageRank calculado anteriormente
+/// @param p página de interesse
+/// @return último PageRank calculado
 double getLastPageRank(Page *p);
 
-// Cria uma Página com nome definido
-// ponteiros NULOS e valores zerados
+
+/// @brief cria uma nova página
+/// @param page_name nome da página
+/// @return página criada
 Page *createPage(char *page_name);
 
 // Troca PageRank
+
+/// @brief define novo PageRank
+/// @param p páginad de interesse
+/// @param pr novo PageRank
 void setPageRank(Page *p, double pr);
 
 // Retorna quantos termos página tem em uma busca
+
+/// @brief obtém contador de interseção
+/// @param p página de interesse
+/// @return contador
 int getIntersectionCounter(Page * p);
 
 // Troca PagesIn
+
+/// @brief Substitui conjunto de páginas IN
+/// @param p página de interesse
+/// @param node raiz da nova árvore
 void setPagesIn(Page *p, Tree *node);
 
-// => PagesOut
+//equivalente de setPagesIn => PagesOut
 void setPagesOut(Page *p, Tree *node);
 
-// Troca PagesOutSize
+
+/// @brief troca tamanho do conjunto de páginas OUT
+/// @param p página de interesse
+/// @param size novo tamanho
 void setPagesOutSize(Page *p, int size);
 
-// Troca LastPageRank
+
+/// @brief troca LastPageRank
+/// @param p página de interesse
+/// @param pr novo LastPageRank
 void setLastPageRank(Page *p, double pr);
 
 // Função auxiliar
+
+/// @brief auxiliar para imprimir página
+/// @param page página a ser impressa
+/// @param argument
 void printPage(void *page, void *argument);
 
-// Comparador de Páginas por Nome
+
+/// @brief compara duas páginas por nome
+/// @param k1 nome da pagina 1
+/// @param k2 nome da pagina 2
+/// @return resultado da comparação
 int pageComparatorByName(void *k1, void *k2);
 
-// Move PageRank para LastPageRank
+
+/// @brief move pageRank para LastPageRank
+/// @param page página de interesse
+/// @param argument 
 void updatePageRank(void *page, void *argument);
 
-// Calcula a parte de soma para o calculo de PageRanking
+
+/// @brief calcula a parte de soma para o calculo de PageRanking
+/// @param page página de interesse
+/// @param argument 
 void getSumPageRank(void *page, void *argument);
 
-// Calcula um ciclo de atualização do PageRanking
+
+
+/// @brief calcula um ciclo de atualização do PageRanking
+/// @param page página de interesse
+/// @param argument 
 void calculatePageRank(void *page, void *argument);
 
-// Comparador de Páginas por PageRanking
+
+/// @brief compara páginas por PageRanking
+/// @param p1 página 1
+/// @param p2 página 2
+/// @return resultado da comparação
 int pageComparatorByPageRanking(void *p1, void *p2);
 
-// Callback do processador de consultas
+
+/// @brief callback do processador de consultas
+/// @param value 
+/// @param argument
 void intersectionProcessor(void * value, void * argument);
 
-// Comparador de páginas para o quicksort
+
+/// @brief comparador de páginas para o quicksort
+/// @param p1 página 1
+/// @param p2 página 2
+/// @return resultado da comparação
 int comparatorPagesVector(const void *p1, const void *p2); 
 
-// Gerador de saídas das consultas
+
+/// @brief gerador de saídas das consultas
+/// @param buffer busca realizada pelo usuário
+/// @param pagesVector vetor com as páginas que apareceram
+/// @param pagesVectorSize tamanho do vetor
+/// @param intersectionRange quantidade máxima da interseção
 void printConsult(char * buffer, Page ** pagesVector, int pagesVectorSize, int intersectionRange);
 
 #endif
